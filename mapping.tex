@@ -1,0 +1,97 @@
+\documentclass[]{article}
+\usepackage{amsmath,mathtools}
+\usepackage[margin=1 in]{geometry}
+\usepackage{amssymb}
+%opening
+\title{Mapping functions to n-sphere}
+\author{Anjishnu Bandyopadhyay}
+
+\begin{document}
+
+\maketitle
+
+\pagebreak
+
+Let $f_{i}(x|\alpha_{i}) \ i=0(i)n$ be $n+1$ functions we want to map on the surface of an $n$-sphere. The functions can be completely described by their Fisher distance matrix 
+
+$\Delta_{ij} = \text{arccos} (\int \sqrt{f(x|\alpha_{i}) f(x|\alpha_{j})})$   
+\newline
+We suppose that $f(x|\alpha_{0})$ is the nominal distribution and $f(x|\alpha_{k}) \ k=1(k)n$ are the $n$ variational distributions. At first, we embed $f(x|\alpha_{0})$ onto the south pole of the $n$-sphere. The position vector of the south pole of the $n$-sphere is $I_{0} = (0,0,............,x_{00}) \ \text{where} \ x_{00}=-1$.
+
+Consequently, we embed the functions $f(x|\alpha_{k}) \ k=1(k)n$ recursively. We use $n$-dimensional vectors to denote the position of the functions mapped onto the sphere. The form of the vectors used is shown below
+%
+\begin{align}
+\label{eq:1a}
+\begin{split}
+X_{1} &= (0,0,0,......,x_{01}, x_{11}) \\   
+X_{2} &= (0,0,0,....,x_{02},x_{12},x_{22}) \\ 
+\cdot &= \cdots \cdot \\  
+\cdot &= \cdot \cdot \cdot \\
+\cdot &= \cdot \cdot \cdot \\ 
+X_{k} &= (0,0,0,...,x_{0k},x_{1k},x_{2k},x_{3k},....,x_{k-1,k},x_{kk})  \\
+\cdot &= \cdot \cdot \cdot  \\
+\cdot &= \cdot \cdot \cdot  \\ 
+\cdot &= \cdot \cdot \cdot \\ 
+X_{n} &= (x_{0n},x_{1n},...,x_{n-1,n},x_{nn}) \\ 
+\end{split}
+\end{align}
+%
+So for $X_{k}$, the first $n-k$ coordinates are $0$ and rest of them are embedded on $\mathbb{R}^{k}$.
+Since these vectors lie on the surface of the $n$-sphere they should satisfy
+%
+\begin{equation}
+\sum_{i=0}^{k} \ x_{ik}^{2} = 1 \ \forall \ k
+\label{eq:1}
+\end{equation}  
+%
+In addition to this, the position vectors must be defined in such a way that the distance between any two points $X_{k}$ and $X_{m}$ $k \neq m$ is their Fisher information distance i.e. $\Delta_{km}$. Therefore we have
+\begin{equation}
+\begin{split}
+ \MoveEqLeft
+x_{ok}^{2} + x_{1k}^{2} + ...... + x_{m+1,k}^{2} + (x_{mk} - x_{0m})^{2} + (x_{m+1,k} - x_{1m})^{2} \\ 
+& + ...... + (x_{kk} - x_{mm})^{2} + (x_{k-1,k} - x_{m-1,m})^{2} = \Delta_{km}^{2}
+\end{split}
+\label{eq:2}
+\end{equation}
+%
+Since the geometry is spherical we can use Euclidean distances as a measure of the distance between the different points.
+Combining equations \eqref{eq:1} and \eqref{eq:2} we get 
+\begin{equation}
+x_{mk} \cdot x_{0m} + x_{m+1,k} \cdot x_{1m} + ..... + x_{k-1,k} \cdot x_{m-1,m} + x_{kk} \cdot x_{mm}= 1 - \frac{\Delta_{km}^{2}}{2}
+\label{eq:3}
+\end{equation} 
+%
+When we embed the points recursively using \eqref{eq:3}, for $X_{k}$, $k$ equations of the form \eqref{eq:3} needs to be solved. These $k$ equations can be written as a matrix equation as shown in \eqref{eq:4}
+% 
+\begin{equation}
+\begin{pmatrix} x_{0,k-1} & x_{1,k-1} &\cdots&\cdots&x_{k-1,k-1} \\
+                0&x_{0,k-2}&x_{1,k-2}&\cdots&x_{k-2,k-2} \\
+                0&0&\cdots&\cdots&\cdots  \\
+                \vdots&\vdots&\vdots&\vdots&\vdots& \\
+               0&0&\cdots&x_{01}&x_{11} \\
+               0&0&\cdots&0&x_{00} \\
+\end{pmatrix} 
+\cdot
+\begin{pmatrix}
+x_{0k} \\
+x_{1k} \\
+x_{2k}  \\
+\vdots  \\
+x_{k-1,k} \\ 
+x_{kk}
+\end{pmatrix}
+=
+\begin{pmatrix}
+1 - \frac{\Delta_{0k}^{2}}{2} \\
+1 - \frac{\Delta_{1k}^{2}}{2} \\
+1 - \frac{\Delta_{2k}^{2}}{2} \\
+\vdots \\
+1 - \frac{\Delta_{k-1,k}^{2}}{2} \\
+1 - \frac{\Delta_{kk}^{2}}{2}
+\end{pmatrix}
+\label{eq:4}
+\end{equation}
+%
+Comparing \eqref{eq:1a} and \eqref{eq:4} we notice that the rows of the first matrix are the position vectors $X_{k-1}, X_{k-2}, \cdots, X_{1}, X_{0}$ respectively which have been computed using the previous similar $k-1$ matrix equations. These $k$ equations preserve the distances of $X_{k}$ with $X_{0}\cdots X_{k-1}$. The other $(n-k)$ Fisher distances are preserved by solving the consequent $(n-k)$ matrix equations for $X_{k+1}...X_{n}$.
+
+\end{document}
