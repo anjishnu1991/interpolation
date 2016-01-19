@@ -48,8 +48,8 @@ In addition to this, the position vectors must be defined in such a way that the
 \begin{equation}
 \begin{split}
  \MoveEqLeft
-x_{ok}^{2} + x_{1k}^{2} + ...... + x_{m+1,k}^{2} + (x_{k-(m+1),k} - x_{0m})^{2} + (x_{k-m,k} - x_{1m})^{2} \\ 
-& + (x_{k-(m-1),k} - x_{2m})^{2} + ...... + (x_{k-1,k} - x_{m-1,m})^{2} + (x_{kk} - x_{mm})^{2}= \Delta_{km}^{2}
+x_{ok}^{2} + x_{1k}^{2} + ...... + x_{m+1,k}^{2} + (x_{mk} - x_{0m})^{2} + (x_{m+1,k} - x_{1m})^{2} \\ 
+& + ...... + (x_{kk} - x_{mm})^{2} + (x_{k-1,k} - x_{m-1,m})^{2} = \Delta_{km}^{2}
 \end{split}
 \label{eq:2}
 \end{equation}
@@ -57,7 +57,7 @@ x_{ok}^{2} + x_{1k}^{2} + ...... + x_{m+1,k}^{2} + (x_{k-(m+1),k} - x_{0m})^{2} 
 Since the geometry is spherical we can use Euclidean distances as a measure of the distance between the different points.
 Combining equations \eqref{eq:1} and \eqref{eq:2} we get 
 \begin{equation}
-x_{k-(m+1),k} \cdot x_{0m} + x_{k-m,k} \cdot x_{1m} + ..... + x_{k-1,k} \cdot x_{m-1,m} + x_{kk} \cdot x_{mm}= 1 - \frac{\Delta_{km}^{2}}{2}
+x_{mk} \cdot x_{0m} + x_{m+1,k} \cdot x_{1m} + ..... + x_{k-1,k} \cdot x_{m-1,m} + x_{kk} \cdot x_{mm}= 1 - \frac{\Delta_{km}^{2}}{2}
 \label{eq:3}
 \end{equation} 
 %
@@ -73,6 +73,7 @@ When we embed the points recursively using \eqref{eq:3}, for $X_{k}$, $k$ equati
 \end{pmatrix} 
 \cdot
 \begin{pmatrix}
+x_{0k} \\
 x_{1k} \\
 x_{2k}  \\
 \vdots  \\
@@ -81,6 +82,7 @@ x_{kk}
 \end{pmatrix}
 =
 \begin{pmatrix}
+1 - \frac{\Delta_{0k}^{2}}{2} \\
 1 - \frac{\Delta_{1k}^{2}}{2} \\
 1 - \frac{\Delta_{2k}^{2}}{2} \\
 \vdots \\
@@ -91,6 +93,5 @@ x_{kk}
 \end{equation}
 %
 Comparing \eqref{eq:1a} and \eqref{eq:4} we notice that the rows of the first matrix are the position vectors $X_{k-1}, X_{k-2}, \cdots, X_{1}, X_{0}$ respectively which have been computed using the previous similar $k-1$ matrix equations. These $k$ equations preserve the distances of $X_{k}$ with $X_{0}\cdots X_{k-1}$. The other $(n-k)$ Fisher distances are preserved by solving the consequent $(n-k)$ matrix equations for $X_{k+1}...X_{n}$.
-As it can be seen, \eqref{eq:4} does not compute $x_{0k}$. After solving \eqref{eq:4}, we compute $x_{0k}$ by using \eqref{eq:1}. 
 
 \end{document}
