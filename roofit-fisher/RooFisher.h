@@ -19,28 +19,26 @@ using namespace std;
 #endif
 
 
-typedef std::map<vector<double>, RooAbsReal*> FunctionMap;
+typedef std::map< vector<double>, RooAbsReal*> FunctionMap;
 
 class RooFisher : public RooAbsReal{
 public:
   RooFisher() {} ; 
-  RooFisher(const char *name, const char *title, RooArgList& paramSet,  FunctionMap& FisherMap);
+  RooFisher(const char *name, const char *title, const RooArgList& paramSet, const  FunctionMap& FisherMap);
   inline virtual ~RooFisher() { }
-
+  virtual TObject* clone(const char* newName) const{return new RooFisher();}
 
 protected:
 
   virtual Double_t evaluate() const ;
-  int i;
-  vector<double> alpha;
-  FunctionMap FisherMap;
-  RooListProxy _paramSet;
+  std::map<int, vector<double>> _parameterPoints;
   RooListProxy _inputPdfs;
+  RooListProxy _paramSet;
+  int i;
 private:
    
 
   ClassDef(RooFisher,1); // Your description goes here...
 };
- 
-#endif
+#endif 
 

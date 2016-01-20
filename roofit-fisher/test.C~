@@ -1,0 +1,30 @@
+
+#include "RooFisher.h"
+#include "RooGaussian.h"
+
+void test(){
+	RooWorkspace* ws = new RooWorkspace("ws");
+	//ws->factory("x[-5,5], mu[-3,3], sigma[5,1.5]");
+	RooAbsReal* g1 = ws->factory("Gaussian:g1(x[-5,5], mu1[-3,3], sigma1[5,1.5])");
+	RooAbsReal* g2 = ws->factory("Gaussian:g2(x[-5,5], mu2[-3,3], sigma2[5,1.5])");
+	RooAbsReal* g3 = ws->factory("Gaussian:g3(x[-5,5], mu3[-3,3], sigma3[5,1.5])");
+	ws->var("sigma1")->setConstant();
+	ws->var("sigma2")->setConstant();
+	ws->var("sigma3")->setConstant();
+	ws->Print();
+
+
+}
+
+
+void test2()
+{
+
+vector<double> alpha1, alpha2;
+
+alpha1.push_back(0);
+alpha1.push_back(1);
+alpha2.push_back(0);
+alpha2.push_back(2);
+ 
+}
