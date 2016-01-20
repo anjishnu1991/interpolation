@@ -11,7 +11,7 @@ ROOTSYS = ../..
 include $(ROOTSYS)/etc/Makefile.arch
 endif
 
-DICT      := RooPdfPythonWrapperDict.$(SrcSuf)
+DICT      := RooFisherDict.$(SrcSuf)
 DICTH     := $(DICT:.$(SrcSuf)=.h)
 DICTO     := $(DICT:.$(SrcSuf)=.$(ObjSuf))
 
@@ -20,14 +20,14 @@ SRCS      := $(wildcard *.$(SrcSuf))
 HDRS      := $(SRCS:.$(SrcSuf)=.h) LinkDef.h
 HDRS      := $(filter-out $(DICTH),$(HDRS))
 
-TARGETLIB := libRooPdfPythonWrapper.$(DllSuf)
+TARGETLIB := libRooFisher.$(DllSuf)
 
 OBJS      := $(SRCS:.$(SrcSuf)=.$(ObjSuf))
 
 ############# RULES ###############
 
 .$(SrcSuf).$(ObjSuf):
-	$(CXX) `python-config --include` $(CXXFLAGS) -c $<
+	$(CXX) $(CXXFLAGS) -c $<
 
 ############# TARGETS #############
 
@@ -53,5 +53,5 @@ distclean: clean
 
 clean:
 	@rm -f $(OBJS) $(DICTO)
-	@rm RooPdfPythonWrapperDict.cxx RooPdfPythonWrapperDict.h libRooPdfPythonWrapper.so 
+	@rm RooFisherDict.cxx RooFisherDict.h libRooFisher.so 
 

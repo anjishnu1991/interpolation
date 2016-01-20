@@ -7,8 +7,6 @@
 # based on notes and discussion with Jeff Streets at UCI.
 
 
-from ROOT import *
-gSystem.Load( 'libRooFitPythonWrapper' )
 
 import numpy as np
 import numpy.linalg as linalg
