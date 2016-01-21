@@ -142,7 +142,7 @@ void RooFisher::Streamer(TBuffer &R__b)
       }
       _inputPdfs.Streamer(R__b);
       _paramSet.Streamer(R__b);
-      R__b >> i;
+      R__b >> _index;
       R__b.CheckByteCount(R__s, R__c, RooFisher::IsA());
    } else {
       R__c = R__b.WriteVersion(RooFisher::IsA(), kTRUE);
@@ -166,7 +166,7 @@ void RooFisher::Streamer(TBuffer &R__b)
       }
       _inputPdfs.Streamer(R__b);
       _paramSet.Streamer(R__b);
-      R__b << i;
+      R__b << _index;
       R__b.SetByteCount(R__c, kTRUE);
    }
 }

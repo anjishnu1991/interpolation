@@ -25,9 +25,9 @@ ClassImp(RooFisher)
    {
 	for(FunctionMap::const_iterator it = FisherMap.begin(); it != FisherMap.end(); it++) {
 // 	std::cout <<   iterator->second   << std::endl ;
-         i = std::distance( FisherMap.begin(), it );
-        _parameterPoints[i] = it->first;
-        _inputPdfs.add(*it->second);
+        _index = std::distance( FisherMap.begin(), it );
+        _inputPdfs.add(*it->first);
+        _parameterPoints.at(_index) = it->second;
     
 	}  
   

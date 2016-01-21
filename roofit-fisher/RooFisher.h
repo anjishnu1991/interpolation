@@ -19,7 +19,7 @@ using namespace std;
 #endif
 
 
-typedef std::map< vector<double>, RooAbsReal*> FunctionMap;
+typedef std::vector<std::pair<RooAbsReal*,vector<double>>> FunctionMap;
 
 class RooFisher : public RooAbsReal{
 public:
@@ -31,10 +31,10 @@ public:
 protected:
 
   virtual Double_t evaluate() const ;
-  std::map<int, vector<double>> _parameterPoints;
+  std::map<int,vector<double>> _parameterPoints;
   RooListProxy _inputPdfs;
   RooListProxy _paramSet;
-  int i;
+  int _index;
 private:
    
 
