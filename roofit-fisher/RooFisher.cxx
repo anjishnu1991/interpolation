@@ -7,7 +7,7 @@
 
 #include "RooFisher.h" 
 #include <math.h> 
-
+#include "RooLinkedListIter.h"
 #ifndef __CINT__
 #endif
 
@@ -25,34 +25,28 @@ ClassImp(RooFisher)
    {
 	for(FunctionMap::const_iterator it = FisherMap.begin(); it != FisherMap.end(); it++) {
 // 	std::cout <<   iterator->second   << std::endl ;
-        _index = std::distance( FisherMap.begin(), it );
-        _inputPdfs.add(*it->first);
-        _parameterPoints.at(_index) = it->second;
-    
+        _parameterPoints = it->first;
+        _inputPdfs.add(*it->second);
+       
 	}  
   
 }
-   
-/*
-   vector<double> linspace(double a, double b, int n) {
-       vector<double> array;
-       double step = (b-a) / (n-1);
-   
-       while(a <= b) {
-           array.push_back(a);
-           a += step;           
-       }
-       return array;
-   }
-*/
+
+ vector<vector<double>> RooFisher::_getRootpdfs()
+{
+     RooAbsReal* pdf;
+     RooFIter Iter1(_inputPdfs.fwdIterator());
+     while(pdf = ((RooAbsReal*)Iter1.next())){
+       double q = sqrt(pdf->getVal());
+       vector<double> xarray = linspace(-7,7,1000);
+       vector<vector<double>> Rootpdf;
+       Rootpdf.push_back(q(xarray));
+       return Rootpdf
+      }   
+    }  
  Double_t RooFisher::evaluate() const 
- {/*
-  double xmin =-7
-  double xmax = 7
-  int num = 1000
-  
-  xarray = linspace(xmin,xmax,num) 
-*/
+ {
+
    return 1;   
      
    }

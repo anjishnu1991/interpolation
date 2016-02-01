@@ -13,14 +13,15 @@
 #include "RooCategoryProxy.h"
 #include "RooAbsCategory.h"
 #include <map>
+#include "TMatrix.h"
 using namespace std;
 
 #ifndef __CINT__
 #endif
 
 
-typedef std::vector<std::pair<RooAbsReal*,vector<double>>> FunctionMap;
-
+typedef std::map<int,vector<double>> keyType;
+typedef std::map<keyType, RooAbsReal*> FunctionMap;
 class RooFisher : public RooAbsReal{
 public:
   RooFisher() {} ; 
@@ -31,13 +32,12 @@ public:
 protected:
 
   virtual Double_t evaluate() const ;
-  std::map<int,vector<double>> _parameterPoints;
-  RooListProxy _inputPdfs;
+  keyType  _parameterPoints;
   RooListProxy _paramSet;
-  int _index;
+  RooListProxy _inputPdfs;
 private:
-   
-
+vector< vector<double>> _getRootpdfs();
+ vector<double> linspace(double a, double b, double n);
   ClassDef(RooFisher,1); // Your description goes here...
 };
 #endif 

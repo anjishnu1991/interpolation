@@ -121,7 +121,7 @@ void RooFisher::Streamer(TBuffer &R__b)
       Version_t R__v = R__b.ReadVersion(&R__s, &R__c); if (R__v) { }
       RooAbsReal::Streamer(R__b);
       {
-         map<int,vector<double> > &R__stl =  _parameterPoints;
+         keyType &R__stl =  _parameterPoints;
          R__stl.clear();
          TClass *R__tcl2 = TBuffer::GetClass(typeid(class std::vector<double, class std::allocator<double> >));
          if (R__tcl2==0) {
@@ -142,13 +142,12 @@ void RooFisher::Streamer(TBuffer &R__b)
       }
       _inputPdfs.Streamer(R__b);
       _paramSet.Streamer(R__b);
-      R__b >> _index;
       R__b.CheckByteCount(R__s, R__c, RooFisher::IsA());
    } else {
       R__c = R__b.WriteVersion(RooFisher::IsA(), kTRUE);
       RooAbsReal::Streamer(R__b);
       {
-         map<int,vector<double> > &R__stl =  _parameterPoints;
+         keyType &R__stl =  _parameterPoints;
          int R__n=int(R__stl.size());
          R__b << R__n;
          if(R__n) {
@@ -157,7 +156,7 @@ void RooFisher::Streamer(TBuffer &R__b)
             Error("_parameterPointsstreamer","Missing the TClass object for class std::vector<double, class std::allocator<double> >!");
             return;
          }
-            map<int,vector<double> >::iterator R__k;
+            keyType::iterator R__k;
             for (R__k = R__stl.begin(); R__k != R__stl.end(); ++R__k) {
             R__b << ((*R__k).first );
             R__b.StreamObject((vector<double>*)&((*R__k).second),R__tcl2);
@@ -166,7 +165,6 @@ void RooFisher::Streamer(TBuffer &R__b)
       }
       _inputPdfs.Streamer(R__b);
       _paramSet.Streamer(R__b);
-      R__b << _index;
       R__b.SetByteCount(R__c, kTRUE);
    }
 }
