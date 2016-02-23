@@ -38,6 +38,7 @@
 namespace std {} using namespace std;
 
 // Header files passed as explicit arguments
+#include "RooCFAuto000Func.h"
 #include "RooFisher.h"
 
 // Header files passed via #pragma extra_include
@@ -56,7 +57,7 @@ namespace ROOT {
       ::RooFisher *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::RooFisher >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("RooFisher", ::RooFisher::Class_Version(), "RooFisher.h", 24,
+         instance("RooFisher", ::RooFisher::Class_Version(), "RooFisher.h", 27,
                   typeid(::RooFisher), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::RooFisher::Dictionary, isa_proxy, 16,
                   sizeof(::RooFisher) );
@@ -140,8 +141,99 @@ void RooFisher::Streamer(TBuffer &R__b)
             R__stl.insert(R__t3);
          }
       }
-      _inputPdfs.Streamer(R__b);
       _paramSet.Streamer(R__b);
+      _inputPdfs.Streamer(R__b);
+      _rootPdfs.Streamer(R__b);
+      _tangents.Streamer(R__b);
+      {
+         vector<vector<double> > &R__stl =  Innerproducts;
+         R__stl.clear();
+         TClass *R__tcl1 = TBuffer::GetClass(typeid(class std::vector<double, class std::allocator<double> >));
+         if (R__tcl1==0) {
+            Error("Innerproducts streamer","Missing the TClass object for class std::vector<double, class std::allocator<double> >!");
+            return;
+         }
+         int R__i, R__n;
+         R__b >> R__n;
+         R__stl.reserve(R__n);
+         for (R__i = 0; R__i < R__n; R__i++) {
+            vector<double> R__t;
+            R__b.StreamObject(&R__t,R__tcl1);
+            R__stl.push_back(R__t);
+         }
+      }
+      R__b >> w;
+      R__b >> dim;
+      R__b >> pdf1;
+      R__b >> pdf2;
+      R__b >> prod;
+      R__b >> q_dist;
+      {
+         vector<double> &R__stl =  BaryoCords;
+         R__stl.clear();
+         int R__i, R__n;
+         R__b >> R__n;
+         R__stl.reserve(R__n);
+         for (R__i = 0; R__i < R__n; R__i++) {
+            double R__t;
+            R__b >> R__t;
+            R__stl.push_back(R__t);
+         }
+      }
+      {
+         vector<double> &R__stl =  normBaryoCords;
+         R__stl.clear();
+         int R__i, R__n;
+         R__b >> R__n;
+         R__stl.reserve(R__n);
+         for (R__i = 0; R__i < R__n; R__i++) {
+            double R__t;
+            R__b >> R__t;
+            R__stl.push_back(R__t);
+         }
+      }
+      {
+         vector<Double_t> &R__stl =  alpha;
+         R__stl.clear();
+         int R__i, R__n;
+         R__b >> R__n;
+         R__stl.reserve(R__n);
+         for (R__i = 0; R__i < R__n; R__i++) {
+            double R__t;
+            R__b >> R__t;
+            R__stl.push_back(R__t);
+         }
+      }
+      R__b >> inner_prod;
+      {
+         vector<vector<double> > &R__stl =  alphas;
+         R__stl.clear();
+         TClass *R__tcl1 = TBuffer::GetClass(typeid(class std::vector<double, class std::allocator<double> >));
+         if (R__tcl1==0) {
+            Error("alphas streamer","Missing the TClass object for class std::vector<double, class std::allocator<double> >!");
+            return;
+         }
+         int R__i, R__n;
+         R__b >> R__n;
+         R__stl.reserve(R__n);
+         for (R__i = 0; R__i < R__n; R__i++) {
+            vector<double> R__t;
+            R__b.StreamObject(&R__t,R__tcl1);
+            R__stl.push_back(R__t);
+         }
+      }
+      {
+         vector<Double_t> &R__stl =  alphaSimplex;
+         R__stl.clear();
+         int R__i, R__n;
+         R__b >> R__n;
+         R__stl.reserve(R__n);
+         for (R__i = 0; R__i < R__n; R__i++) {
+            double R__t;
+            R__b >> R__t;
+            R__stl.push_back(R__t);
+         }
+      }
       R__b.CheckByteCount(R__s, R__c, RooFisher::IsA());
    } else {
       R__c = R__b.WriteVersion(RooFisher::IsA(), kTRUE);
@@ -163,8 +255,93 @@ void RooFisher::Streamer(TBuffer &R__b)
             }
          }
       }
-      _inputPdfs.Streamer(R__b);
       _paramSet.Streamer(R__b);
+      _inputPdfs.Streamer(R__b);
+      _rootPdfs.Streamer(R__b);
+      _tangents.Streamer(R__b);
+      {
+         vector<vector<double> > &R__stl =  Innerproducts;
+         int R__n=int(R__stl.size());
+         R__b << R__n;
+         if(R__n) {
+         TClass *R__tcl1 = TBuffer::GetClass(typeid(class std::vector<double, class std::allocator<double> >));
+         if (R__tcl1==0) {
+            Error("Innerproducts streamer","Missing the TClass object for class std::vector<double, class std::allocator<double> >!");
+            return;
+         }
+            vector<vector<double> >::iterator R__k;
+            for (R__k = R__stl.begin(); R__k != R__stl.end(); ++R__k) {
+            R__b.StreamObject((vector<double>*)&(*R__k),R__tcl1);
+            }
+         }
+      }
+      R__b << w;
+      R__b << dim;
+      R__b << pdf1;
+      R__b << pdf2;
+      R__b << prod;
+      R__b << q_dist;
+      {
+         vector<double> &R__stl =  BaryoCords;
+         int R__n=int(R__stl.size());
+         R__b << R__n;
+         if(R__n) {
+            vector<double>::iterator R__k;
+            for (R__k = R__stl.begin(); R__k != R__stl.end(); ++R__k) {
+            R__b << (*R__k);
+            }
+         }
+      }
+      {
+         vector<double> &R__stl =  normBaryoCords;
+         int R__n=int(R__stl.size());
+         R__b << R__n;
+         if(R__n) {
+            vector<double>::iterator R__k;
+            for (R__k = R__stl.begin(); R__k != R__stl.end(); ++R__k) {
+            R__b << (*R__k);
+            }
+         }
+      }
+      {
+         vector<Double_t> &R__stl =  alpha;
+         int R__n=int(R__stl.size());
+         R__b << R__n;
+         if(R__n) {
+            vector<Double_t>::iterator R__k;
+            for (R__k = R__stl.begin(); R__k != R__stl.end(); ++R__k) {
+            R__b << (*R__k);
+            }
+         }
+      }
+      R__b << inner_prod;
+      {
+         vector<vector<double> > &R__stl =  alphas;
+         int R__n=int(R__stl.size());
+         R__b << R__n;
+         if(R__n) {
+         TClass *R__tcl1 = TBuffer::GetClass(typeid(class std::vector<double, class std::allocator<double> >));
+         if (R__tcl1==0) {
+            Error("alphas streamer","Missing the TClass object for class std::vector<double, class std::allocator<double> >!");
+            return;
+         }
+            vector<vector<double> >::iterator R__k;
+            for (R__k = R__stl.begin(); R__k != R__stl.end(); ++R__k) {
+            R__b.StreamObject((vector<double>*)&(*R__k),R__tcl1);
+            }
+         }
+      }
+      {
+         vector<Double_t> &R__stl =  alphaSimplex;
+         int R__n=int(R__stl.size());
+         R__b << R__n;
+         if(R__n) {
+            vector<Double_t>::iterator R__k;
+            for (R__k = R__stl.begin(); R__k != R__stl.end(); ++R__k) {
+            R__b << (*R__k);
+            }
+         }
+      }
       R__b.SetByteCount(R__c, kTRUE);
    }
 }
@@ -193,6 +370,69 @@ namespace ROOT {
       ((::RooFisher*)obj)->::RooFisher::Streamer(buf);
    }
 } // end of namespace ROOT for class ::RooFisher
+
+namespace ROOT {
+   static TClass *vectorlEvectorlEdoublegRsPgR_Dictionary();
+   static void vectorlEvectorlEdoublegRsPgR_TClassManip(TClass*);
+   static void *new_vectorlEvectorlEdoublegRsPgR(void *p = 0);
+   static void *newArray_vectorlEvectorlEdoublegRsPgR(Long_t size, void *p);
+   static void delete_vectorlEvectorlEdoublegRsPgR(void *p);
+   static void deleteArray_vectorlEvectorlEdoublegRsPgR(void *p);
+   static void destruct_vectorlEvectorlEdoublegRsPgR(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const vector<vector<double> >*)
+   {
+      vector<vector<double> > *ptr = 0;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<vector<double> >));
+      static ::ROOT::TGenericClassInfo 
+         instance("vector<vector<double> >", -2, "vector", 210,
+                  typeid(vector<vector<double> >), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &vectorlEvectorlEdoublegRsPgR_Dictionary, isa_proxy, 0,
+                  sizeof(vector<vector<double> >) );
+      instance.SetNew(&new_vectorlEvectorlEdoublegRsPgR);
+      instance.SetNewArray(&newArray_vectorlEvectorlEdoublegRsPgR);
+      instance.SetDelete(&delete_vectorlEvectorlEdoublegRsPgR);
+      instance.SetDeleteArray(&deleteArray_vectorlEvectorlEdoublegRsPgR);
+      instance.SetDestructor(&destruct_vectorlEvectorlEdoublegRsPgR);
+      instance.AdoptCollectionProxyInfo(TCollectionProxyInfo::Generate(TCollectionProxyInfo::Pushback< vector<vector<double> > >()));
+      return &instance;
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_(Init) = GenerateInitInstanceLocal((const vector<vector<double> >*)0x0); R__UseDummy(_R__UNIQUE_(Init));
+
+   // Dictionary for non-ClassDef classes
+   static TClass *vectorlEvectorlEdoublegRsPgR_Dictionary() {
+      TClass* theClass =::ROOT::GenerateInitInstanceLocal((const vector<vector<double> >*)0x0)->GetClass();
+      vectorlEvectorlEdoublegRsPgR_TClassManip(theClass);
+   return theClass;
+   }
+
+   static void vectorlEvectorlEdoublegRsPgR_TClassManip(TClass* ){
+   }
+
+} // end of namespace ROOT
+
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_vectorlEvectorlEdoublegRsPgR(void *p) {
+      return  p ? ::new((::ROOT::Internal::TOperatorNewHelper*)p) vector<vector<double> > : new vector<vector<double> >;
+   }
+   static void *newArray_vectorlEvectorlEdoublegRsPgR(Long_t nElements, void *p) {
+      return p ? ::new((::ROOT::Internal::TOperatorNewHelper*)p) vector<vector<double> >[nElements] : new vector<vector<double> >[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_vectorlEvectorlEdoublegRsPgR(void *p) {
+      delete ((vector<vector<double> >*)p);
+   }
+   static void deleteArray_vectorlEvectorlEdoublegRsPgR(void *p) {
+      delete [] ((vector<vector<double> >*)p);
+   }
+   static void destruct_vectorlEvectorlEdoublegRsPgR(void *p) {
+      typedef vector<vector<double> > current_t;
+      ((current_t*)p)->~current_t();
+   }
+} // end of namespace ROOT for class vector<vector<double> >
 
 namespace ROOT {
    static TClass *vectorlEdoublegR_Dictionary();
@@ -323,6 +563,7 @@ namespace ROOT {
 namespace {
   void TriggerDictionaryInitialization_RooFisherDict_Impl() {
     static const char* headers[] = {
+"RooCFAuto000Func.h",
 "RooFisher.h",
 0
     };
@@ -347,6 +588,7 @@ class __attribute__((annotate(R"ATTRDUMP(Your description goes here...)ATTRDUMP"
 #endif
 
 #define _BACKWARD_BACKWARD_WARNING_H
+#include "RooCFAuto000Func.h"
 #include "RooFisher.h"
 
 #undef  _BACKWARD_BACKWARD_WARNING_H
