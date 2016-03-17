@@ -32,9 +32,12 @@ ClassImp(RooFisher)
 }
 
 
- TMatrixD RooFisher::_getNormedSimplex(){
+ vector<vector<double>> RooFisher::InnerProducts(){
  RooFIter Iter_pdf1(_inputPdfs.fwdIterator());
  RooFIter Iter_pdf2(_inputPdfs.fwdIterator());
+ RooAbsReal* pdf1;
+ RooAbsReal* pdf2;
+ RooAbsReal* prod;
  vector<double> list_inner_prod;
  RooAbsReal* integral;
  RooAbsReal* q;
@@ -51,59 +54,56 @@ ClassImp(RooFisher)
     double Inner_Product = integral->getVal();
     list_inner_prod.push_back(Inner_Product);
    }
-    Innerproducts.push_back(list_inner_prod);
+    InnerProducts.push_back(list_inner_prod);
+ } 
+
+    return InnerProducts; 
+}  
  
-}   
-    dim =  Innerproducts.size();
-    int n = dim -1;
-    TMatrixD embeded(dim,dim);
-    TMatrixD gnomonicProjection(dim,dim);
+
+ MatrixXd RooFisher::normedSimplex(){
+    dim =  InnerProducts.size();
+    n = dim -1;
     embeded(0,n) = -1;
     for(int k=1; k<dim;++k){
-       TMatrixD* y = new TMatrixD(k,k);
-       TVectorD* z = new TVectorD(k);
-        
+       vector<double> Z; 
+       MatrixXd y(k,k);
+       VectorXd z;
        for (int j=0; j<k; ++j){
-           z[j] = 1 - (pow(Innerproducts[j][k],2))*0.5;
-           for (int m=0; m<k; ++j){
-               y[j][m] = embeded[j][dim-k+j];
-        } 
+           Z[j] = (1 - (pow(InnerProducts[j][k],2))*0.5);
+       z = VectorXd::Map(Z.data(),Z.size()); 
+       y = embeded.topRightCorner(k,k);
+	}
+        VectorXd x = y.colPivHouseholderQr().solve(z);
+        double x_0k = -sqrt(1-x.squaredNorm());
+        embeded(k,dim-k) = x_0k;
     }
-        TDecompLU lu(*y);
-        Bool_t ok;
-        TVectorD x;
-        x = lu.Solve(*z,ok);
-        double x_0k = -sqrt(1-x.Norm2Sqr());
-        embeded[k][dim-k] = x_0k;
         for(int i=0; i<dim; ++i){
-           embeded[k][i]=x[0];
-           gnomonicProjection[i] =embeded[i];
-           TMatrixDRow (gnomonicProjection,i) = -1/embeded[i][n];
-           alphas.push_back(_parameterPoints[i]); 
-        } 
-}
-       
-       TMatrixD normedVertices(dim,n);
+           gnomonicProjection(i) = -1*embeded(i)/embeded(i,n);            
+        }        
+       MatrixXd normedVertices(dim,n);
+       normedVertices =  gnomonicProjection.block(0,0,dim,n);
        for(int col=0; col<n; ++col){
-          TMatrixDColumn(normedVertices,col) = TMatrixDColumn(gnomonicProjection,col);
+          normedVertices.col(col) /=  (normedVertices.col(col)).squaredNorm();           
        } 
-       TMatrixD normedSimplex = normedVertices; // Triangulation needed  
-     
-       for(int m=0; m<dim; ++m){
-         RooAbsReal* t = (RooAbsReal*) w->factory("cexpr::t(`(_rootPdfs.at(i) - Innerproducts[0][m]*_rootPdfs.at(m))',_rootPdfs.at(m),_rootPdfs.at(0)");
-        RooAbsReal* Norm = (RooAbsReal*) w->factory("prod:t^2('t*t')");
+       MatrixXd normedSimplex = normedVertices; // Triangulation needed 
+    return normedSimplex;
+ }    
+
+ //      for(int m=0; m<dim; ++m){
+ //        RooAbsReal* t = (RooAbsReal*) w->factory("cexpr::t(`(_rootPdfs.at(i) - Innerproducts[0][m]*_rootPdfs.at(m))',_rootPdfs.at(m),_rootPdfs.at(0)");
+   //     RooAbsReal* Norm = (RooAbsReal*) w->factory("prod:t^2('t*t')");
     //  double norm_integral = norm->creatIntegral(*x);
-        double Norm_integral = Norm->getVal();
-        RooAbsReal* u = (RooAbsReal*) w->factory("cexpr::u('t/sqrt(norm_integral)')");
-        _tangents.add(*u); 
- }
-   return normedSimplex;
-}
+     //   double Norm_integral = Norm->getVal();
+     //   RooAbsReal* u = (RooAbsReal*) w->factory("cexpr::u('t/sqrt(norm_integral)')");
+      //  _tangents.add(*u); 
+// }
+
 
 
 
  Double_t RooFisher::evaluate() const 
- {   RooAbsReal* param; 
+ {/* RooAbsReal* param; 
      RooFIter paramIter(_paramSet.fwdIterator()) ;
      RooFIter tangentIter(_tangents.fwdIterator()) ;
      while((param=(RooAbsReal*)paramIter.next())) {
@@ -116,9 +116,9 @@ ClassImp(RooFisher)
      
 //should I use workspace for defining unnorm_tan, norm_tan etc??
 
-/*unnorm_tan = lambda x: u1(x)*normedBaryCoords[0]+u2(x)*normedBaryCoords[1]
+unnorm_tan = lambda x: u1(x)*normedBaryCoords[0]+u2(x)*normedBaryCoords[1]
 norm_tan = inner_product(unnorm_tan,unnorm_tan)
 tangent = lambda x: unnorm_tan(x) / np.sqrt(norm_tan)*/
-   return t;   
+   return 1;   
      
 }   

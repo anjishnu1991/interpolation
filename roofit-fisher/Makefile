@@ -16,18 +16,18 @@ DICTH     := $(DICT:.$(SrcSuf)=.h)
 DICTO     := $(DICT:.$(SrcSuf)=.$(ObjSuf))
 
 SRCS      := $(wildcard *.$(SrcSuf))
-
 HDRS      := $(SRCS:.$(SrcSuf)=.h) LinkDef.h
 HDRS      := $(filter-out $(DICTH),$(HDRS))
-
+INC       := /home/anjishnu/interpolation/include/Eigen                                                                               
+INCDIRS   := -I$(INC)
 TARGETLIB := libRooFisher.$(DllSuf)
-
+CFLAGS    := $(CXXFLAGS) $(INCDIRS)
 OBJS      := $(SRCS:.$(SrcSuf)=.$(ObjSuf))
 
 ############# RULES ###############
 
 .$(SrcSuf).$(ObjSuf):
-	$(CXX) $(CXXFLAGS) -c $<
+	$(CXX) $(CFLAGS) -c $<
 
 ############# TARGETS #############
 
@@ -39,7 +39,6 @@ $(DICT): $(HDRS)
 	@echo "Generating dictionary $@..."
 	rootcint  -f $@ -c  $^
 	#$(ROOTCINT) -f $@ -c RooFitPythonWrapper.h LinkDef.h
-
 
 $(TARGETLIB): $(OBJS) $(DICTO)
 ifeq ($(PLATFORM),macosx)

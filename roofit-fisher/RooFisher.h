@@ -13,11 +13,10 @@
 #include "RooListProxy.h"
 #include "RooCategoryProxy.h"
 #include "RooAbsCategory.h"
+#include <Dense>
 #include <map>
-#include "TMatrix.h"
-#include "TVector.h"
-#include "TDecompLU.h"
 using namespace std;
+using namespace Eigen;
 #ifndef __CINT__
 #endif
 
@@ -39,21 +38,21 @@ protected:
   RooListProxy _inputPdfs;
   RooListProxy _rootPdfs;
   RooListProxy _tangents;
-  vector<vector<double>> Innerproducts;
-private:
   RooWorkspace* w;
+  vector<vector<double>> InnerProducts;
+  MatrixXd normedSimplex;
+  MatrixXd embeded;
+  MatrixXd gnomonicProjection;
   int dim;
-  RooAbsReal* pdf1;
-  RooAbsReal* pdf2;
-  RooAbsReal* prod;
+  int n;
+private:
   RooAbsReal* q_dist;
   vector<double> BaryoCords;
   vector<double> normBaryoCords;
   vector<Double_t> alpha;
   RooAbsReal* inner_prod;
-  TMatrixD _getNormedSimplex();
   vector<vector<double>> alphas;
-  vector<Double_t> alphaSimplex; //Triangulation
+  vector<double> alphaSimplex; //Triangulation
   ClassDef(RooFisher,1); // Your description goes here...
 };
 #endif 
