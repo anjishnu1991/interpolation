@@ -18,8 +18,6 @@ DICTO     := $(DICT:.$(SrcSuf)=.$(ObjSuf))
 SRCS      := $(wildcard *.$(SrcSuf))
 HDRS      := $(SRCS:.$(SrcSuf)=.h) LinkDef.h
 HDRS      := $(filter-out $(DICTH),$(HDRS))
-INC       := /home/anjishnu/interpolation/include/Eigen                                                                               
-INCDIRS   := -I$(INC)
 TARGETLIB := libRooFisher.$(DllSuf)
 CFLAGS    := $(CXXFLAGS) $(INCDIRS)
 OBJS      := $(SRCS:.$(SrcSuf)=.$(ObjSuf))

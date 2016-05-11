@@ -1,8 +1,11 @@
 #include <iostream>
-#include <Eigen/Dense>
+#include <Dense>
 #include <vector>
 using namespace Eigen;
 using namespace std;
+
+
+
 
 int main()
 {
@@ -10,9 +13,17 @@ int main()
   m(0,0) = 3;
   m(1,0) = 2.5;
   m(0,1) = -1;
-  m(1,1) = m(1,0) + m(0,1);
-  std::cout << m << std::endl;
-
+  m(1,1) = 1;
+  VectorXd v1 = m.row(0);
+  cout << v1[1] << "   " << m.rows() <<   "    " << m << endl;
+  vector<double> v2;
+v2.resize(v1.size());
+VectorXd::Map(&v2[0], v1.size()) = v1;
+  cout << v2[0] << "   " << v2[1] << endl;
+ cout << std::abs(v2) << endl;
+} 
+//  std::cout << m << std::endl;
+/*
     vector<vector <double> > Innerproducts;
     int dim =  Innerproducts.size();
     int n = dim -1;
@@ -37,8 +48,7 @@ int main()
            gnomonicProjection(i) = -1*embeded(i)/embeded(i,n);
             
         } 
-
-}
+*/
 
 
 

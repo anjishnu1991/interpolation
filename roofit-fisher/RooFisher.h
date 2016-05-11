@@ -6,15 +6,36 @@
 #ifndef ROOFISHER
 #define ROOFISHER
 
+#include <eigen3/Eigen/Dense>
+#include <map>
 #include "RooAbsPdf.h"
 #include "RooAbsReal.h"
+#include "RooRealVar.h"
 #include "RooWorkspace.h"
 #include "RooRealProxy.h"
 #include "RooListProxy.h"
 #include "RooCategoryProxy.h"
 #include "RooAbsCategory.h"
-#include <Dense>
-#include <map>
+#include <CGAL/Cartesian_d.h>
+#include <CGAL/Delaunay_d.h>
+#include <CGAL/predicates_d.h>
+#include <CGAL/constructions_d.h>
+#include <CGAL/algorithm.h>
+#include <CGAL/Timer.h>
+#include <CGAL/assertions.h>
+
+#include <iostream>
+#include <iterator>
+#include <vector>
+
+#include <CGAL/Gmpz.h>
+typedef double  					     FT;
+
+typedef CGAL::Cartesian_d<FT>                                 K;
+typedef CGAL::Delaunay_d<K>                                      D;
+typedef D::Simplex_handle  			        Simplex_handle;
+typedef D::Vertex_handle  			        Vertex_handle;
+typedef D::Point_d  			        Point_d;
 using namespace std;
 using namespace Eigen;
 #ifndef __CINT__
@@ -39,20 +60,22 @@ protected:
   RooListProxy _rootPdfs;
   RooListProxy _tangents;
   RooWorkspace* w;
+  void calculateInnerProducts();
+  void calculateNormedVertices();
+  void calculateTriangulations();
   vector<vector<double>> InnerProducts;
-  MatrixXd normedSimplex;
-  MatrixXd embeded;
+  MatrixXd normedVertices;
   MatrixXd gnomonicProjection;
   int dim;
   int n;
+  D alpha_Dt(n);
+  D gnomonic_Dt(n);
+  D normed_Dt(n);
 private:
   RooAbsReal* q_dist;
-  vector<double> BaryoCords;
-  vector<double> normBaryoCords;
-  vector<Double_t> alpha;
-  RooAbsReal* inner_prod;
-  vector<vector<double>> alphas;
-  vector<double> alphaSimplex; //Triangulation
+  vector<K::FT> coords;
+  vector<K:FT> gnomonicTarget;
+  vector<K:FT> normBaryoCoords;
   ClassDef(RooFisher,1); // Your description goes here...
 };
 #endif 

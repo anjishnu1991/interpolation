@@ -38,7 +38,6 @@
 namespace std {} using namespace std;
 
 // Header files passed as explicit arguments
-#include "RooCFAuto000Func.h"
 #include "RooFisher.h"
 
 // Header files passed via #pragma extra_include
@@ -145,28 +144,11 @@ void RooFisher::Streamer(TBuffer &R__b)
       _inputPdfs.Streamer(R__b);
       _rootPdfs.Streamer(R__b);
       _tangents.Streamer(R__b);
-      {
-         vector<vector<double> > &R__stl =  Innerproducts;
-         R__stl.clear();
-         TClass *R__tcl1 = TBuffer::GetClass(typeid(class std::vector<double, class std::allocator<double> >));
-         if (R__tcl1==0) {
-            Error("Innerproducts streamer","Missing the TClass object for class std::vector<double, class std::allocator<double> >!");
-            return;
-         }
-         int R__i, R__n;
-         R__b >> R__n;
-         R__stl.reserve(R__n);
-         for (R__i = 0; R__i < R__n; R__i++) {
-            vector<double> R__t;
-            R__b.StreamObject(&R__t,R__tcl1);
-            R__stl.push_back(R__t);
-         }
-      }
       R__b >> w;
+      R__b.StreamObject(&(embeded),typeid(embeded));
+      R__b.StreamObject(&(gnomonicProjection),typeid(gnomonicProjection));
       R__b >> dim;
-      R__b >> pdf1;
-      R__b >> pdf2;
-      R__b >> prod;
+      R__b >> n;
       R__b >> q_dist;
       {
          vector<double> &R__stl =  BaryoCords;
@@ -204,7 +186,6 @@ void RooFisher::Streamer(TBuffer &R__b)
             R__stl.push_back(R__t);
          }
       }
-      R__b >> inner_prod;
       {
          vector<vector<double> > &R__stl =  alphas;
          R__stl.clear();
@@ -223,7 +204,7 @@ void RooFisher::Streamer(TBuffer &R__b)
          }
       }
       {
-         vector<Double_t> &R__stl =  alphaSimplex;
+         vector<double> &R__stl =  alphaSimplex;
          R__stl.clear();
          int R__i, R__n;
          R__b >> R__n;
@@ -259,27 +240,11 @@ void RooFisher::Streamer(TBuffer &R__b)
       _inputPdfs.Streamer(R__b);
       _rootPdfs.Streamer(R__b);
       _tangents.Streamer(R__b);
-      {
-         vector<vector<double> > &R__stl =  Innerproducts;
-         int R__n=int(R__stl.size());
-         R__b << R__n;
-         if(R__n) {
-         TClass *R__tcl1 = TBuffer::GetClass(typeid(class std::vector<double, class std::allocator<double> >));
-         if (R__tcl1==0) {
-            Error("Innerproducts streamer","Missing the TClass object for class std::vector<double, class std::allocator<double> >!");
-            return;
-         }
-            vector<vector<double> >::iterator R__k;
-            for (R__k = R__stl.begin(); R__k != R__stl.end(); ++R__k) {
-            R__b.StreamObject((vector<double>*)&(*R__k),R__tcl1);
-            }
-         }
-      }
       R__b << w;
+      R__b.StreamObject(&(embeded),typeid(embeded));
+      R__b.StreamObject(&(gnomonicProjection),typeid(gnomonicProjection));
       R__b << dim;
-      R__b << pdf1;
-      R__b << pdf2;
-      R__b << prod;
+      R__b << n;
       R__b << q_dist;
       {
          vector<double> &R__stl =  BaryoCords;
@@ -314,7 +279,6 @@ void RooFisher::Streamer(TBuffer &R__b)
             }
          }
       }
-      R__b << inner_prod;
       {
          vector<vector<double> > &R__stl =  alphas;
          int R__n=int(R__stl.size());
@@ -332,11 +296,11 @@ void RooFisher::Streamer(TBuffer &R__b)
          }
       }
       {
-         vector<Double_t> &R__stl =  alphaSimplex;
+         vector<double> &R__stl =  alphaSimplex;
          int R__n=int(R__stl.size());
          R__b << R__n;
          if(R__n) {
-            vector<Double_t>::iterator R__k;
+            vector<double>::iterator R__k;
             for (R__k = R__stl.begin(); R__k != R__stl.end(); ++R__k) {
             R__b << (*R__k);
             }
@@ -563,12 +527,11 @@ namespace ROOT {
 namespace {
   void TriggerDictionaryInitialization_RooFisherDict_Impl() {
     static const char* headers[] = {
-"RooCFAuto000Func.h",
 "RooFisher.h",
 0
     };
     static const char* includePaths[] = {
-"/home/anjishnu/interpolation/root/include",
+"/home/anjishnu/root/include",
 "/home/anjishnu/interpolation/roofit-fisher/",
 0
     };
@@ -588,7 +551,6 @@ class __attribute__((annotate(R"ATTRDUMP(Your description goes here...)ATTRDUMP"
 #endif
 
 #define _BACKWARD_BACKWARD_WARNING_H
-#include "RooCFAuto000Func.h"
 #include "RooFisher.h"
 
 #undef  _BACKWARD_BACKWARD_WARNING_H
