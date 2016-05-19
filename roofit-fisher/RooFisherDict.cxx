@@ -56,8 +56,8 @@ namespace ROOT {
       ::RooFisher *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::RooFisher >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("RooFisher", ::RooFisher::Class_Version(), "RooFisher.h", 27,
-                  typeid(::RooFisher), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+         instance("RooFisher", ::RooFisher::Class_Version(), "RooFisher.h", 46,
+                  typeid(::RooFisher), DefineBehavior(ptr, ptr),
                   &::RooFisher::Dictionary, isa_proxy, 16,
                   sizeof(::RooFisher) );
       instance.SetNew(&new_RooFisher);
@@ -145,53 +145,14 @@ void RooFisher::Streamer(TBuffer &R__b)
       _rootPdfs.Streamer(R__b);
       _tangents.Streamer(R__b);
       R__b >> w;
-      R__b.StreamObject(&(embeded),typeid(embeded));
-      R__b.StreamObject(&(gnomonicProjection),typeid(gnomonicProjection));
-      R__b >> dim;
-      R__b >> n;
+      R__b >> x;
       R__b >> q_dist;
       {
-         vector<double> &R__stl =  BaryoCords;
-         R__stl.clear();
-         int R__i, R__n;
-         R__b >> R__n;
-         R__stl.reserve(R__n);
-         for (R__i = 0; R__i < R__n; R__i++) {
-            double R__t;
-            R__b >> R__t;
-            R__stl.push_back(R__t);
-         }
-      }
-      {
-         vector<double> &R__stl =  normBaryoCords;
-         R__stl.clear();
-         int R__i, R__n;
-         R__b >> R__n;
-         R__stl.reserve(R__n);
-         for (R__i = 0; R__i < R__n; R__i++) {
-            double R__t;
-            R__b >> R__t;
-            R__stl.push_back(R__t);
-         }
-      }
-      {
-         vector<Double_t> &R__stl =  alpha;
-         R__stl.clear();
-         int R__i, R__n;
-         R__b >> R__n;
-         R__stl.reserve(R__n);
-         for (R__i = 0; R__i < R__n; R__i++) {
-            double R__t;
-            R__b >> R__t;
-            R__stl.push_back(R__t);
-         }
-      }
-      {
-         vector<vector<double> > &R__stl =  alphas;
+         vector<vector<double> > &R__stl =  InnerProducts;
          R__stl.clear();
          TClass *R__tcl1 = TBuffer::GetClass(typeid(class std::vector<double, class std::allocator<double> >));
          if (R__tcl1==0) {
-            Error("alphas streamer","Missing the TClass object for class std::vector<double, class std::allocator<double> >!");
+            Error("InnerProducts streamer","Missing the TClass object for class std::vector<double, class std::allocator<double> >!");
             return;
          }
          int R__i, R__n;
@@ -203,18 +164,11 @@ void RooFisher::Streamer(TBuffer &R__b)
             R__stl.push_back(R__t);
          }
       }
-      {
-         vector<double> &R__stl =  alphaSimplex;
-         R__stl.clear();
-         int R__i, R__n;
-         R__b >> R__n;
-         R__stl.reserve(R__n);
-         for (R__i = 0; R__i < R__n; R__i++) {
-            double R__t;
-            R__b >> R__t;
-            R__stl.push_back(R__t);
-         }
-      }
+      R__b.StreamObject(&(normedVertices),typeid(normedVertices));
+      R__b.StreamObject(&(embeded),typeid(embeded));
+      R__b.StreamObject(&(gnomonicProjection),typeid(gnomonicProjection));
+      R__b >> dim;
+      R__b >> n;
       R__b.CheckByteCount(R__s, R__c, RooFisher::IsA());
    } else {
       R__c = R__b.WriteVersion(RooFisher::IsA(), kTRUE);
@@ -241,52 +195,16 @@ void RooFisher::Streamer(TBuffer &R__b)
       _rootPdfs.Streamer(R__b);
       _tangents.Streamer(R__b);
       R__b << w;
-      R__b.StreamObject(&(embeded),typeid(embeded));
-      R__b.StreamObject(&(gnomonicProjection),typeid(gnomonicProjection));
-      R__b << dim;
-      R__b << n;
+      R__b << x;
       R__b << q_dist;
       {
-         vector<double> &R__stl =  BaryoCords;
-         int R__n=int(R__stl.size());
-         R__b << R__n;
-         if(R__n) {
-            vector<double>::iterator R__k;
-            for (R__k = R__stl.begin(); R__k != R__stl.end(); ++R__k) {
-            R__b << (*R__k);
-            }
-         }
-      }
-      {
-         vector<double> &R__stl =  normBaryoCords;
-         int R__n=int(R__stl.size());
-         R__b << R__n;
-         if(R__n) {
-            vector<double>::iterator R__k;
-            for (R__k = R__stl.begin(); R__k != R__stl.end(); ++R__k) {
-            R__b << (*R__k);
-            }
-         }
-      }
-      {
-         vector<Double_t> &R__stl =  alpha;
-         int R__n=int(R__stl.size());
-         R__b << R__n;
-         if(R__n) {
-            vector<Double_t>::iterator R__k;
-            for (R__k = R__stl.begin(); R__k != R__stl.end(); ++R__k) {
-            R__b << (*R__k);
-            }
-         }
-      }
-      {
-         vector<vector<double> > &R__stl =  alphas;
+         vector<vector<double> > &R__stl =  InnerProducts;
          int R__n=int(R__stl.size());
          R__b << R__n;
          if(R__n) {
          TClass *R__tcl1 = TBuffer::GetClass(typeid(class std::vector<double, class std::allocator<double> >));
          if (R__tcl1==0) {
-            Error("alphas streamer","Missing the TClass object for class std::vector<double, class std::allocator<double> >!");
+            Error("InnerProducts streamer","Missing the TClass object for class std::vector<double, class std::allocator<double> >!");
             return;
          }
             vector<vector<double> >::iterator R__k;
@@ -295,17 +213,11 @@ void RooFisher::Streamer(TBuffer &R__b)
             }
          }
       }
-      {
-         vector<double> &R__stl =  alphaSimplex;
-         int R__n=int(R__stl.size());
-         R__b << R__n;
-         if(R__n) {
-            vector<double>::iterator R__k;
-            for (R__k = R__stl.begin(); R__k != R__stl.end(); ++R__k) {
-            R__b << (*R__k);
-            }
-         }
-      }
+      R__b.StreamObject(&(normedVertices),typeid(normedVertices));
+      R__b.StreamObject(&(embeded),typeid(embeded));
+      R__b.StreamObject(&(gnomonicProjection),typeid(gnomonicProjection));
+      R__b << dim;
+      R__b << n;
       R__b.SetByteCount(R__c, kTRUE);
    }
 }
@@ -351,7 +263,7 @@ namespace ROOT {
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<vector<double> >));
       static ::ROOT::TGenericClassInfo 
          instance("vector<vector<double> >", -2, "vector", 210,
-                  typeid(vector<vector<double> >), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  typeid(vector<vector<double> >), DefineBehavior(ptr, ptr),
                   &vectorlEvectorlEdoublegRsPgR_Dictionary, isa_proxy, 0,
                   sizeof(vector<vector<double> >) );
       instance.SetNew(&new_vectorlEvectorlEdoublegRsPgR);
@@ -380,10 +292,10 @@ namespace ROOT {
 namespace ROOT {
    // Wrappers around operator new
    static void *new_vectorlEvectorlEdoublegRsPgR(void *p) {
-      return  p ? ::new((::ROOT::Internal::TOperatorNewHelper*)p) vector<vector<double> > : new vector<vector<double> >;
+      return  p ? ::new((::ROOT::TOperatorNewHelper*)p) vector<vector<double> > : new vector<vector<double> >;
    }
    static void *newArray_vectorlEvectorlEdoublegRsPgR(Long_t nElements, void *p) {
-      return p ? ::new((::ROOT::Internal::TOperatorNewHelper*)p) vector<vector<double> >[nElements] : new vector<vector<double> >[nElements];
+      return p ? ::new((::ROOT::TOperatorNewHelper*)p) vector<vector<double> >[nElements] : new vector<vector<double> >[nElements];
    }
    // Wrapper around operator delete
    static void delete_vectorlEvectorlEdoublegRsPgR(void *p) {
@@ -414,7 +326,7 @@ namespace ROOT {
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<double>));
       static ::ROOT::TGenericClassInfo 
          instance("vector<double>", -2, "vector", 210,
-                  typeid(vector<double>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  typeid(vector<double>), DefineBehavior(ptr, ptr),
                   &vectorlEdoublegR_Dictionary, isa_proxy, 0,
                   sizeof(vector<double>) );
       instance.SetNew(&new_vectorlEdoublegR);
@@ -443,10 +355,10 @@ namespace ROOT {
 namespace ROOT {
    // Wrappers around operator new
    static void *new_vectorlEdoublegR(void *p) {
-      return  p ? ::new((::ROOT::Internal::TOperatorNewHelper*)p) vector<double> : new vector<double>;
+      return  p ? ::new((::ROOT::TOperatorNewHelper*)p) vector<double> : new vector<double>;
    }
    static void *newArray_vectorlEdoublegR(Long_t nElements, void *p) {
-      return p ? ::new((::ROOT::Internal::TOperatorNewHelper*)p) vector<double>[nElements] : new vector<double>[nElements];
+      return p ? ::new((::ROOT::TOperatorNewHelper*)p) vector<double>[nElements] : new vector<double>[nElements];
    }
    // Wrapper around operator delete
    static void delete_vectorlEdoublegR(void *p) {
@@ -477,7 +389,7 @@ namespace ROOT {
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(map<int,vector<double> >));
       static ::ROOT::TGenericClassInfo 
          instance("map<int,vector<double> >", -2, "map", 96,
-                  typeid(map<int,vector<double> >), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  typeid(map<int,vector<double> >), DefineBehavior(ptr, ptr),
                   &maplEintcOvectorlEdoublegRsPgR_Dictionary, isa_proxy, 0,
                   sizeof(map<int,vector<double> >) );
       instance.SetNew(&new_maplEintcOvectorlEdoublegRsPgR);
@@ -506,10 +418,10 @@ namespace ROOT {
 namespace ROOT {
    // Wrappers around operator new
    static void *new_maplEintcOvectorlEdoublegRsPgR(void *p) {
-      return  p ? ::new((::ROOT::Internal::TOperatorNewHelper*)p) map<int,vector<double> > : new map<int,vector<double> >;
+      return  p ? ::new((::ROOT::TOperatorNewHelper*)p) map<int,vector<double> > : new map<int,vector<double> >;
    }
    static void *newArray_maplEintcOvectorlEdoublegRsPgR(Long_t nElements, void *p) {
-      return p ? ::new((::ROOT::Internal::TOperatorNewHelper*)p) map<int,vector<double> >[nElements] : new map<int,vector<double> >[nElements];
+      return p ? ::new((::ROOT::TOperatorNewHelper*)p) map<int,vector<double> >[nElements] : new map<int,vector<double> >[nElements];
    }
    // Wrapper around operator delete
    static void delete_maplEintcOvectorlEdoublegRsPgR(void *p) {
@@ -535,8 +447,8 @@ namespace {
 "/home/anjishnu/interpolation/roofit-fisher/",
 0
     };
-    static const char* fwdDeclCode = R"DICTFWDDCLS(
-#line 1 "RooFisherDict dictionary forward declarations' payload"
+    static const char* fwdDeclCode = 
+R"DICTFWDDCLS(
 #pragma clang diagnostic ignored "-Wkeyword-compat"
 #pragma clang diagnostic ignored "-Wignored-attributes"
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
@@ -544,7 +456,6 @@ extern int __Cling_Autoloading_Map;
 class __attribute__((annotate(R"ATTRDUMP(Your description goes here...)ATTRDUMP"))) __attribute__((annotate(R"ATTRDUMP(Your description goes here...)ATTRDUMP"))) __attribute__((annotate("$clingAutoload$RooFisher.h")))  RooFisher;
 )DICTFWDDCLS";
     static const char* payloadCode = R"DICTPAYLOAD(
-#line 1 "RooFisherDict dictionary payload"
 
 #ifndef G__VECTOR_HAS_CLASS_ITERATOR
   #define G__VECTOR_HAS_CLASS_ITERATOR 1

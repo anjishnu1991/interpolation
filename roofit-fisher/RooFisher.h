@@ -30,7 +30,6 @@
 
 #include <CGAL/Gmpz.h>
 typedef double  					     FT;
-
 typedef CGAL::Cartesian_d<FT>                                 K;
 typedef CGAL::Delaunay_d<K>                                      D;
 typedef D::Simplex_handle  			        Simplex_handle;
@@ -60,22 +59,17 @@ protected:
   RooListProxy _rootPdfs;
   RooListProxy _tangents;
   RooWorkspace* w;
-  void calculateInnerProducts();
-  void calculateNormedVertices();
-  void calculateTriangulations();
+  RooRealVar* x;
+  RooAbsReal* q_dist;
   vector<vector<double>> InnerProducts;
   MatrixXd normedVertices;
+  MatrixXd embeded;
   MatrixXd gnomonicProjection;
   int dim;
   int n;
-  D alpha_Dt(n);
-  D gnomonic_Dt(n);
-  D normed_Dt(n);
+
 private:
-  RooAbsReal* q_dist;
-  vector<K::FT> coords;
-  vector<K:FT> gnomonicTarget;
-  vector<K:FT> normBaryoCoords;
+  
   ClassDef(RooFisher,1); // Your description goes here...
 };
 #endif 

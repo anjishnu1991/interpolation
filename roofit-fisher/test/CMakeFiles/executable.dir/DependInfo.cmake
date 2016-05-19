@@ -4,7 +4,7 @@ SET(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_CXX
-  "/home/anjishnu/test/delaunay_test.cpp" "/home/anjishnu/test/CMakeFiles/executable.dir/delaunay_test.cpp.o"
+  "/home/anjishnu/interpolation/roofit-fisher/test/delaunay_test.cpp" "/home/anjishnu/interpolation/roofit-fisher/test/CMakeFiles/executable.dir/delaunay_test.cpp.o"
   )
 SET(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -20,6 +20,7 @@ SET(CMAKE_TARGET_LINKED_INFO_FILES
 
 # The include file search paths:
 SET(CMAKE_C_TARGET_INCLUDE_PATH
+  "../../include"
   "/usr/include/x86_64-linux-gnu"
   "."
   )

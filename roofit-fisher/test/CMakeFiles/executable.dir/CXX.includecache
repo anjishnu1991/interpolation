@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/anjishnu/test/delaunay_test.cpp
+/home/anjishnu/interpolation/roofit-fisher/test/delaunay_test.cpp
 CGAL/Cartesian_d.h
 -
 CGAL/Delaunay_d.h

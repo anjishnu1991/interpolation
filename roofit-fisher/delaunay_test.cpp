@@ -38,8 +38,8 @@ int main(){
     points.push_back(point2);
     points.push_back(point3);
    
-   
-    D Dt(d);
+    K Kernel 
+    D Dt(d,Kernel,Kernel);
   //  CGAL_assertion(Dt.empty());
    
     // insert the points in the triangulation
