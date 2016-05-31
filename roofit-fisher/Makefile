@@ -21,7 +21,7 @@ HDRS      := $(filter-out $(DICTH),$(HDRS))
 TARGETLIB := libRooFisher.$(DllSuf)
 CFLAGS    := $(CXXFLAGS) $(INCDIRS)
 OBJS      := $(SRCS:.$(SrcSuf)=.$(ObjSuf))
-
+LDFLAGS   := -lCGAL -lgmp -lmpfr -lboost_thread 
 ############# RULES ###############
 
 .$(SrcSuf).$(ObjSuf):
