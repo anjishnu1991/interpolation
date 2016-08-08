@@ -1,10 +1,14 @@
 
 #include "RooFisher.h"
+#include "TSystem.h"
 using namespace std;
 
 void test(){
 
 	gSystem->Load("libRooFisher.so");
+	gSystem->Load("/usr/local/lib/libCGAL.so");
+
+
 
 
 	vector<double> alpha1, alpha2;
