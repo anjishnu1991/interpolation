@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/anjishnu/interpolation/roofit-fisher/test/delaunay_test.cpp
+CGAL/Cartesian_d.h
+-
+CGAL/Delaunay_d.h
+-
+CGAL/predicates_d.h
+-
+CGAL/constructions_d.h
+-
+CGAL/algorithm.h
+-
+CGAL/Timer.h
+-
+CGAL/assertions.h
+-
+iostream
+-
+iterator
+-
+vector
+-
+CGAL/Gmpz.h
+-
+

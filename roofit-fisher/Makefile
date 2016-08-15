@@ -16,18 +16,16 @@ DICTH     := $(DICT:.$(SrcSuf)=.h)
 DICTO     := $(DICT:.$(SrcSuf)=.$(ObjSuf))
 
 SRCS      := $(wildcard *.$(SrcSuf))
-
 HDRS      := $(SRCS:.$(SrcSuf)=.h) LinkDef.h
 HDRS      := $(filter-out $(DICTH),$(HDRS))
-
 TARGETLIB := libRooFisher.$(DllSuf)
-
+CFLAGS    := $(CXXFLAGS) $(INCDIRS)
 OBJS      := $(SRCS:.$(SrcSuf)=.$(ObjSuf))
-
+LDFLAGS   := -lCGAL -lgmp -lmpfr -lboost_thread 
 ############# RULES ###############
 
 .$(SrcSuf).$(ObjSuf):
-	$(CXX) $(CXXFLAGS) -c $<
+	$(CXX) $(CFLAGS) -c $<
 
 ############# TARGETS #############
 
@@ -39,7 +37,6 @@ $(DICT): $(HDRS)
 	@echo "Generating dictionary $@..."
 	rootcint  -f $@ -c  $^
 	#$(ROOTCINT) -f $@ -c RooFitPythonWrapper.h LinkDef.h
-
 
 $(TARGETLIB): $(OBJS) $(DICTO)
 ifeq ($(PLATFORM),macosx)

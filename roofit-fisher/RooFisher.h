@@ -6,18 +6,37 @@
 #ifndef ROOFISHER
 #define ROOFISHER
 
+#include <eigen3/Eigen/Dense>
+#include <map>
 #include "RooAbsPdf.h"
 #include "RooAbsReal.h"
+#include "RooRealVar.h"
 #include "RooWorkspace.h"
 #include "RooRealProxy.h"
 #include "RooListProxy.h"
 #include "RooCategoryProxy.h"
 #include "RooAbsCategory.h"
-#include <map>
-#include "TMatrix.h"
-#include "TVector.h"
-#include "TDecompLU.h"
+#include <CGAL/Cartesian_d.h>
+#include <CGAL/Delaunay_d.h>
+#include <CGAL/predicates_d.h>
+#include <CGAL/constructions_d.h>
+#include <CGAL/algorithm.h>
+#include <CGAL/Timer.h>
+#include <CGAL/assertions.h>
+
+#include <iostream>
+#include <iterator>
+#include <vector>
+
+#include <CGAL/Gmpz.h>
+typedef double  					     FT;
+typedef CGAL::Cartesian_d<FT>                                 K;
+typedef CGAL::Delaunay_d<K>                                      D;
+typedef D::Simplex_handle  			        Simplex_handle;
+typedef D::Vertex_handle  			        Vertex_handle;
+typedef D::Point_d  			        Point_d;
 using namespace std;
+using namespace Eigen;
 #ifndef __CINT__
 #endif
 
@@ -39,21 +58,18 @@ protected:
   RooListProxy _inputPdfs;
   RooListProxy _rootPdfs;
   RooListProxy _tangents;
-  vector<vector<double>> Innerproducts;
-private:
   RooWorkspace* w;
-  int dim;
-  RooAbsReal* pdf1;
-  RooAbsReal* pdf2;
-  RooAbsReal* prod;
+  RooRealVar* x;
   RooAbsReal* q_dist;
-  vector<double> BaryoCords;
-  vector<double> normBaryoCords;
-  vector<Double_t> alpha;
-  RooAbsReal* inner_prod;
-  TMatrixD _getNormedSimplex();
-  vector<vector<double>> alphas;
-  vector<Double_t> alphaSimplex; //Triangulation
+  vector<vector<double>> InnerProducts;
+  MatrixXd normedVertices;
+  MatrixXd embeded;
+  MatrixXd gnomonicProjection;
+  int dim;
+  int n;
+
+private:
+  
   ClassDef(RooFisher,1); // Your description goes here...
 };
 #endif 
