@@ -46,7 +46,7 @@ typedef std::map<keyType, RooAbsReal*> FunctionMap;
 class RooFisher : public RooAbsReal{
 public:
   RooFisher() {} ; 
-  RooFisher(const char *name, const char *title, const RooArgList& paramSet, const  FunctionMap& FisherMap);
+  RooFisher(const char *name, const char *title, const RooArgList& paramSet, const  FunctionMap& FisherMap, const RooWorkspace& win);
   inline virtual ~RooFisher() { }
   virtual TObject* clone(const char* newName) const{return new RooFisher();}
 
