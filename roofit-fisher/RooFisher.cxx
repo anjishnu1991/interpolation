@@ -60,10 +60,8 @@ w = (RooWorkspace*)win.Clone();
 			RooAbsReal* integral = inner_prod->createIntegral(*x);
 			double Inner_Product = integral->getVal();
 			list_inner_prod.push_back(Inner_Product);
-	        	cout << "list_InnerProducts size is " <<  list_inner_prod.size() << endl;
 		}
 		InnerProducts.push_back(list_inner_prod);
-	        cout << "InnerProducts size is " <<  InnerProducts.size() << endl;
 } 
 
 	/*TODO RooAbsCacheManger */  
@@ -72,28 +70,30 @@ w = (RooWorkspace*)win.Clone();
 
 	dim =  InnerProducts.size();
 	n = dim -1;
+        embeded = MatrixXd::Zero(dim,dim);
+       	embeded(0,n) = -1;
 	for(int k=1; k<dim;++k){
-		cout << "Z[j]  is " << endl;
-		vector<double> Z; 
 		MatrixXd y(k,k);
-		VectorXd z;
-                embeded = MatrixXd::Zero(dim,dim);
-                cout << embeded << endl;
-       		embeded(0,n) = -1;
-                cout << embeded << endl;
-                double IP_jk = InnerProducts[0][k];
-                        cout <<  "a" << IP_jk << endl; 
+		VectorXd z(k);
 		for (int j=0; j<k; j++){
-			Z[j] = (1 - (pow(IP_jk,2)*0.5));
-			cout << "Z[j]  is " << Z[j] << endl;
+                	double IP_jk = InnerProducts[j][k];
+			z[j] = (1 - (IP_jk*IP_jk*0.5));
 		}
-		z = VectorXd::Map(Z.data(),Z.size()); 
-		cout << "size z is " << z.size() << endl;
+//		z = VectorXd::Map(Z.data(),Z.size()); 
 		y = embeded.topRightCorner(k,k);
-		cout << "size y is " << y.size() << endl;
 		VectorXd x = y.colPivHouseholderQr().solve(z);
 		double x_0k = -sqrt(1-x.squaredNorm());
-		embeded(k,dim-k) = x_0k;
+                RowVectorXd x_temp = x.transpose();
+                RowVectorXd a(k+1);
+		a << x_temp, x_0k;
+                RowVectorXd zero = (VectorXd::Zero(n-k)).transpose();
+                if(k<n){
+                embeded.row(k) << zero,a;
+                }
+		else if (k==n){ 
+                embeded.row(k) <<  a;
+                }
+                cout << embeded << endl;
 	}
 	for(int i=0; i<dim; ++i){
 		gnomonicProjection(i) = -1*embeded(i)/embeded(i,n);            
