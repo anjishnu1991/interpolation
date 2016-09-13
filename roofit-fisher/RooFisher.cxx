@@ -42,14 +42,12 @@ w = (RooWorkspace*)win.Clone();
 
 	while((pdf1=(RooAbsReal*)Iter_pdf1.next())){
 		string pdf1Name = pdf1->GetName();
-		cout << "Got first loop " << pdf1Name << endl;
 		string sqrtF = "cexpr::sqrt" + pdf1Name +"('sqrt(" + pdf1Name + ")'," + pdf1Name + ")";      
 		q = (RooAbsReal* ) w->factory(sqrtF.c_str());
 		_rootPdfs.add(*q);
 		RooFIter Iter_pdf2(_inputPdfs.fwdIterator());
 		while((pdf2=(RooAbsReal*)Iter_pdf2.next())){
 			string pdf2Name = pdf2->GetName();
-			cout << "Got second loop " << pdf2Name << endl;
                         string sqrtF_pdf1_pdf2;
 			if(pdf2Name==pdf1Name){
 				sqrtF_pdf1_pdf2 = "cexpr::sqrt_" + pdf1Name + "_" + pdf2Name + "('sqrt(" + pdf1Name + "*" + pdf2Name + ")'," + pdf1Name + ")";
@@ -57,12 +55,10 @@ w = (RooWorkspace*)win.Clone();
 			else{	
 				 sqrtF_pdf1_pdf2 = "cexpr::sqrt_"+ pdf1Name + "_" + pdf2Name + "('sqrt(" + pdf1Name + "*" + pdf2Name + ")'," + pdf1Name + "," + pdf2Name + ")";
 			}				
-		cout << sqrtF_pdf1_pdf2 << endl;      
 			inner_prod = (RooAbsReal* ) w->factory(sqrtF_pdf1_pdf2.c_str());
 			x = w->var("x");
 			RooAbsReal* integral = inner_prod->createIntegral(*x);
 			double Inner_Product = integral->getVal();
-			cout << Inner_Product << endl;
 			list_inner_prod.push_back(Inner_Product);
 	        	cout << "list_InnerProducts size is " <<  list_inner_prod.size() << endl;
 		}
@@ -76,17 +72,25 @@ w = (RooWorkspace*)win.Clone();
 
 	dim =  InnerProducts.size();
 	n = dim -1;
-        embeded(0,n) = -1;
-	cout << "size is " << n << endl;
 	for(int k=1; k<dim;++k){
+		cout << "Z[j]  is " << endl;
 		vector<double> Z; 
 		MatrixXd y(k,k);
 		VectorXd z;
-		for (int j=0; j<k; ++j){
-			Z[j] = (1 - (pow(InnerProducts[j][k],2))*0.5);
-			z = VectorXd::Map(Z.data(),Z.size()); 
-			y = embeded.topRightCorner(k,k);
+                embeded = MatrixXd::Zero(dim,dim);
+                cout << embeded << endl;
+       		embeded(0,n) = -1;
+                cout << embeded << endl;
+                double IP_jk = InnerProducts[0][k];
+                        cout <<  "a" << IP_jk << endl; 
+		for (int j=0; j<k; j++){
+			Z[j] = (1 - (pow(IP_jk,2)*0.5));
+			cout << "Z[j]  is " << Z[j] << endl;
 		}
+		z = VectorXd::Map(Z.data(),Z.size()); 
+		cout << "size z is " << z.size() << endl;
+		y = embeded.topRightCorner(k,k);
+		cout << "size y is " << y.size() << endl;
 		VectorXd x = y.colPivHouseholderQr().solve(z);
 		double x_0k = -sqrt(1-x.squaredNorm());
 		embeded(k,dim-k) = x_0k;
