@@ -42,7 +42,7 @@ w = (RooWorkspace*)win.Clone();
 
 	while((pdf1=(RooAbsReal*)Iter_pdf1.next())){
 		string pdf1Name = pdf1->GetName();
-		string sqrtF = "cexpr::sqrt" + pdf1Name +"('sqrt(" + pdf1Name + ")'," + pdf1Name + ")";      
+		string sqrtF = "cexpr::sqrt_" + pdf1Name +"('sqrt(" + pdf1Name + ")'," + pdf1Name + ")";      
 		q = (RooAbsReal* ) w->factory(sqrtF.c_str());
 		_rootPdfs.add(*q);
 		RooFIter Iter_pdf2(_inputPdfs.fwdIterator());
@@ -70,7 +70,9 @@ w = (RooWorkspace*)win.Clone();
 
 	dim =  InnerProducts.size();
 	n = dim -1;
-        embeded = MatrixXd::Zero(dim,dim);
+	embeded = MatrixXd::Zero(dim,dim);
+        gnomonicProjection = MatrixXd::Zero(dim,dim);
+        normedVertices = MatrixXd::Zero(dim,dim-1);
        	embeded(0,n) = -1;
 	for(int k=1; k<dim;++k){
 		MatrixXd y(k,k);
@@ -93,10 +95,10 @@ w = (RooWorkspace*)win.Clone();
 		else if (k==n){ 
                 embeded.row(k) <<  a;
                 }
-                cout << embeded << endl;
 	}
+        
 	for(int i=0; i<dim; ++i){
-		gnomonicProjection(i) = -1*embeded(i)/embeded(i,n);            
+		gnomonicProjection.row(i) = -1*embeded.row(i)/embeded(i,n);            
 	}        
 	normedVertices =  gnomonicProjection.block(0,0,dim,n);
 	for(int col=0; col<n; ++col){
@@ -104,6 +106,10 @@ w = (RooWorkspace*)win.Clone();
 	} 
 
 
+                cout << embeded << endl;
+                cout << gnomonicProjection << endl;
+                cout << normedVertices << endl;
+                cout << _rootPdfs.at(0)->GetName() << endl;
 
 
 }
@@ -232,13 +238,16 @@ The following way creates only an instance. No copy constructor/assignment opera
 	RooAbsReal* unNormtan;
 
 	for(int m=0; m<dim; ++m){
-		RooAbsReal* t = (RooAbsReal*) w->factory("cexpr::t(`(_rootPdfs.at(i) - InnerProducts[0][m]*_rootPdfs.at(m))',_rootPdfs.at(m),_rootPdfs.at(0)");
+                string rootpdfName = _rootPdfs.at(m)->GetName();
+                string rootpdf0Name = _rootPdfs.at(0)->GetName();
+                string tName = "cexpr::t(`(" +rootpdfName+ "- InnerProducts[0][m]*"+ rootpdf0Name+")'," +_ rootPdfs.at(m)"," +rootpdf0Name + ")" 
+		RooAbsRea*l t = (RooAbsReal*) w->factory(tName.c_str());
 		RooAbsReal* Norm = (RooAbsReal*) w->factory("prod:t^2('t*t')");
 		double norm_integral = ((RooAbsReal*)Norm->createIntegral(*x))->getVal();
 		RooAbsReal* u = (RooAbsReal*) w->factory("cexpr::u('t/sqrt(norm_integral)')");
 
-		RooAbsReal* unNormtan_i = (RooAbsReal*) w->factory("sum::uNti(normBaryoCoords[i]*u,unNormtan)");
-		unNormtan = (RooAbsReal*) w->factory("sum::unt(normedBaryoCoords[i]*u,unNormtan)");
+		RooAbsReal* unNormtan_i = (RooAbsReal*) w->factory("sum::uNti(normBaryoCoords[m]*u,unNormtan)");
+		unNormtan = (RooAbsReal*) w->factory("sum::unt(normedBaryoCoords[m]*u,unNormtan)");
 
 
 
