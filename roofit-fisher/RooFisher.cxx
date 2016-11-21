@@ -240,8 +240,8 @@ The following way creates only an instance. No copy constructor/assignment opera
 	for(int m=0; m<dim; ++m){
                 string rootpdfName = _rootPdfs.at(m)->GetName();
                 string rootpdf0Name = _rootPdfs.at(0)->GetName();
-                string tName = "cexpr::t(`(" +rootpdfName+ "- InnerProducts[0][m]*"+ rootpdf0Name+")'," +_ rootPdfs.at(m)"," +rootpdf0Name + ")" 
-		RooAbsRea*l t = (RooAbsReal*) w->factory(tName.c_str());
+                string tName = "cexpr::t(`(" +rootpdfName+ "- InnerProducts[0][m]*"+ rootpdf0Name+")'," +rootpdfName+"," +rootpdf0Name + ")";; 
+		RooAbsReal* t = (RooAbsReal*) w->factory(tName.c_str());
 		RooAbsReal* Norm = (RooAbsReal*) w->factory("prod:t^2('t*t')");
 		double norm_integral = ((RooAbsReal*)Norm->createIntegral(*x))->getVal();
 		RooAbsReal* u = (RooAbsReal*) w->factory("cexpr::u('t/sqrt(norm_integral)')");
