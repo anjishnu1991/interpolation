@@ -5,6 +5,7 @@ using namespace std;
 
 void test(){
 
+	gSystem->Load("/usr/local/lib/libCGAL.so");
 	gSystem->Load("libRooFisher.so");
 
 
@@ -21,11 +22,13 @@ void test(){
         point1[0] = alpha2;
 
 	RooWorkspace* w = new RooWorkspace("ws");
-	RooAbsReal* g1 = (RooAbsReal*)w->factory("Gaussian:g1(x[-5,5], mu[-3,3], sigma[0.5,1.5])");
-	RooAbsReal* g2 =  (RooAbsReal*)w->factory("Gaussian:g2(x[-5,5], mu[-3,3], sigma[0.5,1.5])");
+	RooAbsReal* g1 = (RooAbsReal*)w->factory("Gaussian:g1(x[-5,5], mu1[-3,3], sigma1[0.5,1.5])");
+	RooAbsReal* g2 =  (RooAbsReal*)w->factory("Gaussian:g2(x[-5,5], mu2[-3,3], sigma2[0.5,1.5])");
         RooRealVar* x = w->var("x");
-        RooRealVar* mu = w->var("mu");
-        RooRealVar* sigma = w->var("sigma");
+        RooRealVar* mu1 = w->var("mu1");
+        RooRealVar* mu2 = w->var("mu2");
+        RooRealVar* sigma1 = w->var("sigma1");
+        RooRealVar* sigma2 = w->var("sigma2");
 /*	string pdf2Name = g2->GetName();
 	string pdf1Name = g1->GetName();
 	string sqrtF_pdf1_pdf2 = "cexpr::sqrt_pdf1_pdf2('sqrt(" + pdf1Name + "*" + pdf1Name + ")'," + pdf1Name + ")";
@@ -37,31 +40,19 @@ void test(){
         cout << "Integral " << Inner_Product << endl;
 */
 
+        mu1->setVal(0);
+        mu2->setVal(1);
+        sigma1->setVal(0.5);
+        sigma2->setVal(1);
         FunctionMap FisherMap;
-        RooArgList List(*mu,*sigma);  
-	w->Print();
+        RooArgList List(*mu1,*mu2,*sigma1,*sigma2);  
         FisherMap[point] = g1;
         FisherMap[point1] = g2; 
         RooFisher * Fisher = new RooFisher("testFisher", "testFisher", List, FisherMap, *w); 
-        cout << "a" << endl; 
-	w->import(List);
-        cout << "b" << endl; 
-	w->Print();
-        cout << "c" << endl; 
+/*    	w->import(*Fisher);
 	Fisher->Print("v");
 
-	RooPlot* frame = x->frame();
-
-	for (i=0; i<2; ++i){
-		mu1->setVal(.8+i);
-		mu1->Print();
-		Fisher->plotOn(frame);
-	}	
-
-	
-		frame->Draw();
-
-
-
+	w->Print(); 
+*/
 
  }

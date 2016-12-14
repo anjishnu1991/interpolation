@@ -36,6 +36,7 @@ typedef D::Simplex_handle  			        Simplex_handle;
 typedef D::Vertex_handle  			        Vertex_handle;
 typedef D::Point_d  			        Point_d;
 using namespace std;
+using namespace RooFit;
 using namespace Eigen;
 #ifndef __CINT__
 #endif

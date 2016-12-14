@@ -30,9 +30,12 @@ w = (RooWorkspace*)win.Clone();
 		_inputPdfs.add(*it->second);
 
 	}  
-
-
-
+        RooFIter Iter_var(paramSet.fwdIterator());
+        RooAbsArg* var;
+        while(var=(RooAbsArg*)Iter_var.next()){
+              _paramSet.add(*var);
+	      
+	}
 	RooFIter Iter_pdf1(_inputPdfs.fwdIterator());
 	RooAbsReal* pdf1;
 	RooAbsReal* pdf2;
@@ -57,15 +60,15 @@ w = (RooWorkspace*)win.Clone();
 			}				
 			inner_prod = (RooAbsReal* ) w->factory(sqrtF_pdf1_pdf2.c_str());
 			x = w->var("x");
-			RooAbsReal* integral = inner_prod->createIntegral(*x);
-			double Inner_Product = integral->getVal();
+			RooAbsReal* integral = inner_prod->createIntegral(*x, NormSet(*x));
+			double Inner_Product = integral->getVal ();
 			list_inner_prod.push_back(Inner_Product);
+                        cout << Inner_Product << endl;
 		}
 		InnerProducts.push_back(list_inner_prod);
 } 
 
 	/*TODO RooAbsCacheManger */  
-
 
 
 	dim =  InnerProducts.size();
@@ -106,12 +109,8 @@ w = (RooWorkspace*)win.Clone();
 	} 
 
 
-                cout << embeded << endl;
-                cout << gnomonicProjection << endl;
-                cout << normedVertices << endl;
-                cout << _rootPdfs.at(0)->GetName() << endl;
 
-
+          
 }
 
 
@@ -119,13 +118,13 @@ w = (RooWorkspace*)win.Clone();
 
 Double_t RooFisher::evaluate() const 
 {
-	vector<Point_d> alphas;
+/*	vector<Point_d> alphas;
 	vector<double> target_alpha;
 	//Get target alpha point
-	RooAbsReal* param; 
+	RooRealVar* param; 
 	RooFIter paramIter(_paramSet.fwdIterator()) ;
 	RooFIter tangentIter(_tangents.fwdIterator()) ;
-	while((param=(RooAbsReal*)paramIter.next())) {
+	while((param=(RooRealVar*)paramIter.next())) {
 		double target_alpha_i = param->getVal(); 
 		target_alpha.push_back(target_alpha_i); 
 	}    
@@ -133,10 +132,10 @@ Double_t RooFisher::evaluate() const
 
 	Point_d target_alpha_point(dim, target_alpha.begin(), target_alpha.end()); 
 
-	/*TODO Try to make delaunay triangulations member variables. Since the datatype D doesn't have assignment operator it didn't work for me. Kyle, if you have any ideas, it would be great. 
+	TODO Try to make delaunay triangulations member variables. Since the datatype D doesn't have assignment operator it didn't work for me. Kyle, if you have any ideas, it would be great. 
 http://doc.cgal.org/latest/Convex_hull_d/classCGAL_1_1Delaunay__d.html
 The following way creates only an instance. No copy constructor/assignment operator available
-	 */
+	 
 
 	D alpha_Dt(n);
 	D gnomonic_Dt(n);
@@ -235,6 +234,11 @@ The following way creates only an instance. No copy constructor/assignment opera
 
 	double t_val = atan(std::inner_product(gnomonicTarget.begin(), gnomonicTarget.end(), gnomonicTarget.begin(),0));
 
+         return t_val;
+
+
+
+
 	RooAbsReal* unNormtan;
 
 	for(int m=0; m<dim; ++m){
@@ -243,7 +247,7 @@ The following way creates only an instance. No copy constructor/assignment opera
                 string tName = "cexpr::t(`(" +rootpdfName+ "- InnerProducts[0][m]*"+ rootpdf0Name+")'," +rootpdfName+"," +rootpdf0Name + ")";; 
 		RooAbsReal* t = (RooAbsReal*) w->factory(tName.c_str());
 		RooAbsReal* Norm = (RooAbsReal*) w->factory("prod:t^2('t*t')");
-		double norm_integral = ((RooAbsReal*)Norm->createIntegral(*x))->getVal();
+		double norm_integral = ((RooAbsReal*)Norm->createIntegral(*x, NormSet(*x)))->getVal();
 		RooAbsReal* u = (RooAbsReal*) w->factory("cexpr::u('t/sqrt(norm_integral)')");
 
 		RooAbsReal* unNormtan_i = (RooAbsReal*) w->factory("sum::uNti(normBaryoCoords[m]*u,unNormtan)");
@@ -256,7 +260,7 @@ The following way creates only an instance. No copy constructor/assignment opera
 
 	}
 	RooAbsReal* unnorm_tan_prod =  (RooAbsReal* ) w->factory("prod::unt*unt(unNormtan*unNormtan)");
-	RooAbsReal* normtan = unnorm_tan_prod->createIntegral(*x);
+	RooAbsReal* normtan = unnorm_tan_prod->createIntegral(*x, NormSet(*x));
 	RooAbsReal* tangent = (RooAbsReal*) w->factory("cexpr::tangent(`(unNormtan/sqrt(normtan))',unNormtan,normtan");
 
 	RooAbsReal* q_interpolant =  (RooAbsReal*) w->factory("cexpr::tangent(`(cos(t_val)*,_rootPdfs.at(0) + sin(t_val)*tangent)',tangent,_rootPdfs.at(0)");
@@ -265,5 +269,7 @@ The following way creates only an instance. No copy constructor/assignment opera
 	Double_t interp_val = interpolant->getVal();
 
 	return interp_val;   
+*/
+	return 1;
 
 }   

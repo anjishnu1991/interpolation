@@ -6,7 +6,6 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
 #include <assert.h>
 #define G__DICTIONARY
@@ -56,8 +55,8 @@ namespace ROOT {
       ::RooFisher *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::RooFisher >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("RooFisher", ::RooFisher::Class_Version(), "RooFisher.h", 46,
-                  typeid(::RooFisher), DefineBehavior(ptr, ptr),
+         instance("RooFisher", ::RooFisher::Class_Version(), "RooFisher.h", 47,
+                  typeid(::RooFisher), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::RooFisher::Dictionary, isa_proxy, 16,
                   sizeof(::RooFisher) );
       instance.SetNew(&new_RooFisher);
@@ -262,8 +261,8 @@ namespace ROOT {
       vector<vector<double> > *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<vector<double> >));
       static ::ROOT::TGenericClassInfo 
-         instance("vector<vector<double> >", -2, "vector", 210,
-                  typeid(vector<vector<double> >), DefineBehavior(ptr, ptr),
+         instance("vector<vector<double> >", -2, "vector", 214,
+                  typeid(vector<vector<double> >), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &vectorlEvectorlEdoublegRsPgR_Dictionary, isa_proxy, 0,
                   sizeof(vector<vector<double> >) );
       instance.SetNew(&new_vectorlEvectorlEdoublegRsPgR);
@@ -292,10 +291,10 @@ namespace ROOT {
 namespace ROOT {
    // Wrappers around operator new
    static void *new_vectorlEvectorlEdoublegRsPgR(void *p) {
-      return  p ? ::new((::ROOT::TOperatorNewHelper*)p) vector<vector<double> > : new vector<vector<double> >;
+      return  p ? ::new((::ROOT::Internal::TOperatorNewHelper*)p) vector<vector<double> > : new vector<vector<double> >;
    }
    static void *newArray_vectorlEvectorlEdoublegRsPgR(Long_t nElements, void *p) {
-      return p ? ::new((::ROOT::TOperatorNewHelper*)p) vector<vector<double> >[nElements] : new vector<vector<double> >[nElements];
+      return p ? ::new((::ROOT::Internal::TOperatorNewHelper*)p) vector<vector<double> >[nElements] : new vector<vector<double> >[nElements];
    }
    // Wrapper around operator delete
    static void delete_vectorlEvectorlEdoublegRsPgR(void *p) {
@@ -325,8 +324,8 @@ namespace ROOT {
       vector<double> *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<double>));
       static ::ROOT::TGenericClassInfo 
-         instance("vector<double>", -2, "vector", 210,
-                  typeid(vector<double>), DefineBehavior(ptr, ptr),
+         instance("vector<double>", -2, "vector", 214,
+                  typeid(vector<double>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &vectorlEdoublegR_Dictionary, isa_proxy, 0,
                   sizeof(vector<double>) );
       instance.SetNew(&new_vectorlEdoublegR);
@@ -355,10 +354,10 @@ namespace ROOT {
 namespace ROOT {
    // Wrappers around operator new
    static void *new_vectorlEdoublegR(void *p) {
-      return  p ? ::new((::ROOT::TOperatorNewHelper*)p) vector<double> : new vector<double>;
+      return  p ? ::new((::ROOT::Internal::TOperatorNewHelper*)p) vector<double> : new vector<double>;
    }
    static void *newArray_vectorlEdoublegR(Long_t nElements, void *p) {
-      return p ? ::new((::ROOT::TOperatorNewHelper*)p) vector<double>[nElements] : new vector<double>[nElements];
+      return p ? ::new((::ROOT::Internal::TOperatorNewHelper*)p) vector<double>[nElements] : new vector<double>[nElements];
    }
    // Wrapper around operator delete
    static void delete_vectorlEdoublegR(void *p) {
@@ -389,7 +388,7 @@ namespace ROOT {
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(map<int,vector<double> >));
       static ::ROOT::TGenericClassInfo 
          instance("map<int,vector<double> >", -2, "map", 96,
-                  typeid(map<int,vector<double> >), DefineBehavior(ptr, ptr),
+                  typeid(map<int,vector<double> >), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &maplEintcOvectorlEdoublegRsPgR_Dictionary, isa_proxy, 0,
                   sizeof(map<int,vector<double> >) );
       instance.SetNew(&new_maplEintcOvectorlEdoublegRsPgR);
@@ -418,10 +417,10 @@ namespace ROOT {
 namespace ROOT {
    // Wrappers around operator new
    static void *new_maplEintcOvectorlEdoublegRsPgR(void *p) {
-      return  p ? ::new((::ROOT::TOperatorNewHelper*)p) map<int,vector<double> > : new map<int,vector<double> >;
+      return  p ? ::new((::ROOT::Internal::TOperatorNewHelper*)p) map<int,vector<double> > : new map<int,vector<double> >;
    }
    static void *newArray_maplEintcOvectorlEdoublegRsPgR(Long_t nElements, void *p) {
-      return p ? ::new((::ROOT::TOperatorNewHelper*)p) map<int,vector<double> >[nElements] : new map<int,vector<double> >[nElements];
+      return p ? ::new((::ROOT::Internal::TOperatorNewHelper*)p) map<int,vector<double> >[nElements] : new map<int,vector<double> >[nElements];
    }
    // Wrapper around operator delete
    static void delete_maplEintcOvectorlEdoublegRsPgR(void *p) {
@@ -443,12 +442,12 @@ namespace {
 0
     };
     static const char* includePaths[] = {
-"/home/anjishnu/root/include",
+"/home/anjishnu/root-6.08.00/include",
 "/home/anjishnu/interpolation/roofit-fisher/",
 0
     };
-    static const char* fwdDeclCode = 
-R"DICTFWDDCLS(
+    static const char* fwdDeclCode = R"DICTFWDDCLS(
+#line 1 "RooFisherDict dictionary forward declarations' payload"
 #pragma clang diagnostic ignored "-Wkeyword-compat"
 #pragma clang diagnostic ignored "-Wignored-attributes"
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
@@ -456,6 +455,7 @@ extern int __Cling_Autoloading_Map;
 class __attribute__((annotate(R"ATTRDUMP(Your description goes here...)ATTRDUMP"))) __attribute__((annotate(R"ATTRDUMP(Your description goes here...)ATTRDUMP"))) __attribute__((annotate("$clingAutoload$RooFisher.h")))  RooFisher;
 )DICTFWDDCLS";
     static const char* payloadCode = R"DICTPAYLOAD(
+#line 1 "RooFisherDict dictionary payload"
 
 #ifndef G__VECTOR_HAS_CLASS_ITERATOR
   #define G__VECTOR_HAS_CLASS_ITERATOR 1
