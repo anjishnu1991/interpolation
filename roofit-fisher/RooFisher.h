@@ -10,6 +10,7 @@
 #include <map>
 #include "RooAbsPdf.h"
 #include "RooAbsReal.h"
+#include "RooPlot.h"
 #include "RooRealVar.h"
 #include "RooWorkspace.h"
 #include "RooRealProxy.h"
@@ -47,15 +48,18 @@ typedef std::map<keyType, RooAbsReal*> FunctionMap;
 class RooFisher : public RooAbsReal{
 public:
   RooFisher() {} ; 
-  RooFisher(const char *name, const char *title, const RooArgList& paramSet, const  FunctionMap& FisherMap, const RooWorkspace& win);
+  RooFisher(const char *name, const char *title, const RooArgList& paramSet, const RooArgList& varList, const  FunctionMap& FisherMap, const RooWorkspace& win);
   inline virtual ~RooFisher() { }
   virtual TObject* clone(const char* newName) const{return new RooFisher();}
+
+//virtual RooPlot *plotOn (RooPlot *frame) {return frame;}
 
 protected:
 
   virtual Double_t evaluate() const ;
   keyType  _parameterPoints;
   RooListProxy _paramSet;
+  RooListProxy _varList;
   RooListProxy _inputPdfs;
   RooListProxy _rootPdfs;
   RooListProxy _tangents;

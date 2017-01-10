@@ -55,7 +55,7 @@ namespace ROOT {
       ::RooFisher *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::RooFisher >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("RooFisher", ::RooFisher::Class_Version(), "RooFisher.h", 47,
+         instance("RooFisher", ::RooFisher::Class_Version(), "RooFisher.h", 48,
                   typeid(::RooFisher), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::RooFisher::Dictionary, isa_proxy, 16,
                   sizeof(::RooFisher) );
@@ -140,6 +140,7 @@ void RooFisher::Streamer(TBuffer &R__b)
          }
       }
       _paramSet.Streamer(R__b);
+      _varList.Streamer(R__b);
       _inputPdfs.Streamer(R__b);
       _rootPdfs.Streamer(R__b);
       _tangents.Streamer(R__b);
@@ -190,6 +191,7 @@ void RooFisher::Streamer(TBuffer &R__b)
          }
       }
       _paramSet.Streamer(R__b);
+      _varList.Streamer(R__b);
       _inputPdfs.Streamer(R__b);
       _rootPdfs.Streamer(R__b);
       _tangents.Streamer(R__b);

@@ -39,7 +39,7 @@ int main(){
     points.push_back(point3);
    
     D Dt(d);
-  //  CGAL_assertion(Dt.empty());
+    CGAL_assertion(Dt.empty());
    
     // insert the points in the triangulation
     cost.reset();cost.start();
@@ -56,7 +56,7 @@ int main(){
    
     Vertex_handle v = Dt.nearest_neighbor(point);
     Simplex_handle s = Dt.simplex(v);    
-     
+ 
     std::vector<Point_d> Simplex_vertices;
     for(int j=0; j<=d; ++j){
  	  Vertex_handle vertex = Dt.vertex_of_simplex(s,j);

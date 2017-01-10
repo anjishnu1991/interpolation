@@ -3,7 +3,6 @@
  * Author : Anjishnu Bandyopadhyay
  *****************************************************************************/ 
 
-#include "Riostream.h"   
 #include "RooFisher.h" 
 #include "RooArgSet.h" 
 #include <math.h> 
@@ -15,11 +14,12 @@
 ClassImp(RooFisher) 
 
 
-	RooFisher::RooFisher(const char *name, const char *title, const RooArgList& paramSet, const  FunctionMap& FisherMap, const RooWorkspace& win): 
+	RooFisher::RooFisher(const char *name, const char *title, const RooArgList& paramSet, const RooArgList& varList, const  FunctionMap& FisherMap, const RooWorkspace& win): 
 
 
 		RooAbsReal (name, title),
 		_paramSet("paramSet","paramset", this), 
+		_varList("varList","varList", this), 
 		_inputPdfs("inputPdfs","inputPdfs", this)
 
 { 
@@ -30,10 +30,16 @@ w = (RooWorkspace*)win.Clone();
 		_inputPdfs.add(*it->second);
 
 	}  
-        RooFIter Iter_var(paramSet.fwdIterator());
+        RooFIter Iter_param(paramSet.fwdIterator());
+        RooAbsArg* param;
+        while(param=(RooAbsArg*)Iter_param.next()){
+              _paramSet.add(*param);
+	      
+	}
+        RooFIter Iter_var(varList.fwdIterator());
         RooAbsArg* var;
         while(var=(RooAbsArg*)Iter_var.next()){
-              _paramSet.add(*var);
+              _varList.add(*var);
 	      
 	}
 	RooFIter Iter_pdf1(_inputPdfs.fwdIterator());
@@ -59,9 +65,12 @@ w = (RooWorkspace*)win.Clone();
 				 sqrtF_pdf1_pdf2 = "cexpr::sqrt_"+ pdf1Name + "_" + pdf2Name + "('sqrt(" + pdf1Name + "*" + pdf2Name + ")'," + pdf1Name + "," + pdf2Name + ")";
 			}				
 			inner_prod = (RooAbsReal* ) w->factory(sqrtF_pdf1_pdf2.c_str());
-			x = w->var("x");
+		        string var_x = _varList.at(0)->GetName();
+                        x = (RooRealVar*)(_varList.at(0));
+                        x = w->var(var_x.c_str());
+                        
 			RooAbsReal* integral = inner_prod->createIntegral(*x, NormSet(*x));
-			double Inner_Product = integral->getVal ();
+			double Inner_Product = integral->getVal();
 			list_inner_prod.push_back(Inner_Product);
                         cout << Inner_Product << endl;
 		}
@@ -86,9 +95,9 @@ w = (RooWorkspace*)win.Clone();
 		}
 //		z = VectorXd::Map(Z.data(),Z.size()); 
 		y = embeded.topRightCorner(k,k);
-		VectorXd x = y.colPivHouseholderQr().solve(z);
-		double x_0k = -sqrt(1-x.squaredNorm());
-                RowVectorXd x_temp = x.transpose();
+		VectorXd X = y.colPivHouseholderQr().solve(z);
+		double x_0k = -sqrt(1-X.squaredNorm());
+                RowVectorXd x_temp = X.transpose();
                 RowVectorXd a(k+1);
 		a << x_temp, x_0k;
                 RowVectorXd zero = (VectorXd::Zero(n-k)).transpose();
@@ -118,30 +127,30 @@ w = (RooWorkspace*)win.Clone();
 
 Double_t RooFisher::evaluate() const 
 {
-/*	vector<Point_d> alphas;
+	vector<Point_d> alphas;
 	vector<double> target_alpha;
+	double target_alpha_i; 
 	//Get target alpha point
 	RooRealVar* param; 
 	RooFIter paramIter(_paramSet.fwdIterator()) ;
 	RooFIter tangentIter(_tangents.fwdIterator()) ;
 	while((param=(RooRealVar*)paramIter.next())) {
-		double target_alpha_i = param->getVal(); 
+		target_alpha_i = param->getVal(); 
 		target_alpha.push_back(target_alpha_i); 
 	}    
 
-
 	Point_d target_alpha_point(dim, target_alpha.begin(), target_alpha.end()); 
 
-	TODO Try to make delaunay triangulations member variables. Since the datatype D doesn't have assignment operator it didn't work for me. Kyle, if you have any ideas, it would be great. 
+/*	TODO Try to make delaunay triangulations member variables. Since the datatype D doesn't have assignment operator it didn't work for me. Kyle, if you have any ideas, it would be great. 
 http://doc.cgal.org/latest/Convex_hull_d/classCGAL_1_1Delaunay__d.html
 The following way creates only an instance. No copy constructor/assignment operator available
-	 
+*/	 
 
 	D alpha_Dt(n);
 	D gnomonic_Dt(n);
 	D normed_Dt(n);
 
-
+	CGAL_assertion(alpha_Dt.empty());
 
 
 	//Delaunay triangulation of alphas
@@ -166,6 +175,7 @@ The following way creates only an instance. No copy constructor/assignment opera
 		gnomonicCoords.push_back(gnomonicCoord); 
 	}
 
+
 	for(vector<Point_d>::iterator Itr1 = gnomonicCoords.begin(); Itr1!= gnomonicCoords.end(); ++Itr1){
 		gnomonic_Dt.insert(*Itr1);
 	}
@@ -180,10 +190,9 @@ The following way creates only an instance. No copy constructor/assignment opera
 		VectorXd::Map(&V2[0], V1.size()) = V1;
 		Point_d normedCoord(dim, V2.begin(), V2.end());
 		normedCoords.push_back(normedCoord); 
-
-
 	}
 
+	
 	for(vector<Point_d>::iterator Itr2 = normedCoords.begin(); Itr2!= normedCoords.end(); ++Itr2){
 		normed_Dt.insert(*Itr2);
 	}
@@ -197,6 +206,8 @@ The following way creates only an instance. No copy constructor/assignment opera
 		Simplex_vertices.push_back(alpha_Dt.associated_point(vertex));
 	}
 
+	return Simplex_vertices[0][0];
+/*
 	vector<double> coords;
 	vector<double> gnomonicTarget;
 	vector<double> normedBaryoCoords;
@@ -234,8 +245,7 @@ The following way creates only an instance. No copy constructor/assignment opera
 
 	double t_val = atan(std::inner_product(gnomonicTarget.begin(), gnomonicTarget.end(), gnomonicTarget.begin(),0));
 
-         return t_val;
-
+        return t_val;
 
 
 
@@ -269,7 +279,7 @@ The following way creates only an instance. No copy constructor/assignment opera
 	Double_t interp_val = interpolant->getVal();
 
 	return interp_val;   
-*/
-	return 1;
 
+//	return ;
+*/
 }   

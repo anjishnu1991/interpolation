@@ -23,10 +23,10 @@ void test(){
         point2[0] = alpha3;
 
 	RooWorkspace* w = new RooWorkspace("ws");
-        for(int i=1;i<4; ++i){
-	 w->factory(Form("Gaussian::g%d(x[-10,10],mu%d[%d,-5,5],sigma%d[%d, 0, 3])", i, i,i,i,i));;
+        for(int i=1;i<3; ++i){
+	 w->factory(Form("Gaussian::g%d(y[-10,10],mu%d[%d,-5,5],sigma%d[%d, 0, 3])", i, i,i,i,i));;
         }
-	 x = w->var("x");
+	 RooRealVar* y = (RooRealVar*)w->var("y");
          RooRealVar* mu =(RooRealVar*)w->factory("mu[-5,5]");
 	 mu = w->var("mu");
          RooRealVar*  sigma =(RooRealVar*)w->factory("sigma[0.1,5]");
@@ -43,32 +43,43 @@ void test(){
 */
 
         FunctionMap FisherMap;
-        RooArgList List(*mu,*sigma);  
-	RooPlot* frame = x->frame();
+        RooArgList params(*mu,*sigma);  
+        RooArgList vars(*y);  
+//	RooPlot* frame = x->frame();
         pdf1= w->pdf("g1");
-	pdf1->plotOn(frame);
+//	pdf1->plotOn(frame);
 	FisherMap[point] = pdf1;
         pdf2 = w->pdf("g2");
-	pdf2->plotOn(frame);
+//	pdf2->plotOn(frame);
 	FisherMap[point1] = pdf2;
-        pdf3 = w->pdf("g3");
+ /*       pdf3 = w->pdf("g3");
 	pdf3->plotOn(frame);
 	FisherMap[point2] = pdf3;
-	frame->Draw();
+*///	frame->Draw();
         
-	RooFisher * Fisher = new RooFisher("testFisher", "testFisher", List, FisherMap, *w); 
+	RooFisher * Fisher = new RooFisher("testFisher", "testFisher", params, vars, FisherMap, *w); 
         cout << "a" << endl; 
         cout << "b" << endl; 
 	w->Print();
         cout << "c" << endl; 
 	Fisher->Print("v");
+        
+        cout << "d" << endl; 
+//Fisher->plotSanityChecks(frame);
+       // RooPlot* frame1 =  RooPlot(-10,10);
+        
+        cout << "e" << endl; 
+
+		//Fisher->plotOn(frame, RooFit::LineColor(kRed));
 
 	for (int j=0; j<3; ++j){
 		mu->setVal(.8+j);
 		mu->Print();
 		sigma->setVal(.8+j);
 		sigma->Print();
+                cout << "The value is " << Fisher->getVal() << endl;
 //		Fisher->plotOn(frame, RooFit::LineColor(kRed));
+//		Fisher->plotOn(frame);
 }
 
 
