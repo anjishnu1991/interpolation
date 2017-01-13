@@ -6,26 +6,27 @@ using namespace std;
 void test(){
 
 	gSystem->Load("libRooFisher.so");
+	gSystem->Load("/usr/local/lib/libCGAL.so");
 
 
        
 
 	vector<double> alpha1, alpha2,alpha3;
-        std::map<int, vector<double>> point,point1,point2;
+        keyType point,point1,point2;
+	alpha1.push_back(0);
 	alpha1.push_back(1);
-	alpha1.push_back(1);
-	alpha2.push_back(2);
-	alpha2.push_back(2);
-	alpha3.push_back(3);
-	alpha3.push_back(3);
+	alpha2.push_back(1);
+	alpha2.push_back(1);
+	alpha3.push_back(0.5);
+	alpha3.push_back(1.5);
         point[0] = alpha1;
-        point1[0] = alpha2;
-        point2[0] = alpha3;
+        point1[1] = alpha2;
+        point2[2] = alpha3;
 
 	RooWorkspace* w = new RooWorkspace("ws");
-        for(int i=1;i<3; ++i){
-	 w->factory(Form("Gaussian::g%d(y[-10,10],mu%d[%d,-5,5],sigma%d[%d, 0, 3])", i, i,i,i,i));;
-        }
+	 w->factory("Gaussian::g1(y[-10,10],mu1[0,-5,5],sigma1[1, 0, 3])");
+	 w->factory("Gaussian::g2(y[-10,10],mu2[1,-5,5],sigma1[1, 0, 3])");
+	 w->factory("Gaussian::g3(y[-10,10],mu3[0.5,-5,5],sigma3[1.5, 0, 3])");
 	 RooRealVar* y = (RooRealVar*)w->var("y");
          RooRealVar* mu =(RooRealVar*)w->factory("mu[-5,5]");
 	 mu = w->var("mu");
@@ -52,10 +53,10 @@ void test(){
         pdf2 = w->pdf("g2");
 //	pdf2->plotOn(frame);
 	FisherMap[point1] = pdf2;
- /*       pdf3 = w->pdf("g3");
-	pdf3->plotOn(frame);
+        pdf3 = w->pdf("g3");
+//	pdf3->plotOn(frame);
 	FisherMap[point2] = pdf3;
-*///	frame->Draw();
+//	frame->Draw();
         
 	RooFisher * Fisher = new RooFisher("testFisher", "testFisher", params, vars, FisherMap, *w); 
         cout << "a" << endl; 
@@ -72,15 +73,13 @@ void test(){
 
 		//Fisher->plotOn(frame, RooFit::LineColor(kRed));
 
-	for (int j=0; j<3; ++j){
-		mu->setVal(.8+j);
+		mu->setVal(0.8);
 		mu->Print();
-		sigma->setVal(.8+j);
+		sigma->setVal(0.8);
 		sigma->Print();
                 cout << "The value is " << Fisher->getVal() << endl;
 //		Fisher->plotOn(frame, RooFit::LineColor(kRed));
 //		Fisher->plotOn(frame);
-}
 
 
 

@@ -25,11 +25,13 @@ ClassImp(RooFisher)
 { 
 w = (RooWorkspace*)win.Clone();
 	for(FunctionMap::const_iterator it = FisherMap.begin(); it != FisherMap.end(); it++) {
-		// 	std::cout <<   iterator->second   << std::endl ;
-		_parameterPoints = it->first;
+		keyType _parameterPoints = it->first;
 		_inputPdfs.add(*it->second);
-
-	}  
+        	for(keyType::const_iterator it1=_parameterPoints.begin(); it1 != _parameterPoints.end(); it1++){
+			vector<double> parameterpoint = it1->second;
+			parameterPoints.push_back(parameterpoint); 
+	 }
+	}
         RooFIter Iter_param(paramSet.fwdIterator());
         RooAbsArg* param;
         while(param=(RooAbsArg*)Iter_param.next()){
@@ -72,7 +74,6 @@ w = (RooWorkspace*)win.Clone();
 			RooAbsReal* integral = inner_prod->createIntegral(*x, NormSet(*x));
 			double Inner_Product = integral->getVal();
 			list_inner_prod.push_back(Inner_Product);
-                        cout << Inner_Product << endl;
 		}
 		InnerProducts.push_back(list_inner_prod);
 } 
@@ -80,8 +81,8 @@ w = (RooWorkspace*)win.Clone();
 	/*TODO RooAbsCacheManger */  
 
 
-	dim =  InnerProducts.size();
-	n = dim -1;
+        n = _paramSet.getSize();
+        dim = n+1;
 	embeded = MatrixXd::Zero(dim,dim);
         gnomonicProjection = MatrixXd::Zero(dim,dim);
         normedVertices = MatrixXd::Zero(dim,dim-1);
@@ -113,10 +114,9 @@ w = (RooWorkspace*)win.Clone();
 		gnomonicProjection.row(i) = -1*embeded.row(i)/embeded(i,n);            
 	}        
 	normedVertices =  gnomonicProjection.block(0,0,dim,n);
-	for(int col=0; col<n; ++col){
-		normedVertices.col(col) /=  (normedVertices.col(col)).squaredNorm();           
+	for(int row=1; row<dim; ++row){
+		normedVertices.row(row) /=  sqrt((normedVertices.row(row)).squaredNorm());           
 	} 
-
 
 
           
@@ -150,17 +150,34 @@ The following way creates only an instance. No copy constructor/assignment opera
 	D gnomonic_Dt(n);
 	D normed_Dt(n);
 
+
 	CGAL_assertion(alpha_Dt.empty());
-
-
+	return 1;;
+/*
 	//Delaunay triangulation of alphas
-	for(keyType::const_iterator it =  _parameterPoints.begin(); it !=  _parameterPoints.end(); it++) {
-		Point_d alpha_i(dim, (it->second).begin(), (it->second).end()); 
+	for(vector<vector<double>>::const_iterator it =  parameterPoints.begin(); it !=  parameterPoints.end(); it++) {
+		Point_d alpha_i(dim, it->begin(), it->end()); 
 		alphas.push_back(alpha_i); 
 	}
+	
 	for(vector<Point_d>::iterator Itr = alphas.begin(); Itr!= alphas.end(); ++Itr){
-		alpha_Dt.insert(*Itr);
+                Point_d Pt =(*Itr);
+		alpha_Dt.insert(Pt);
 	}
+
+        CGAL_assertion(alpha_Dt.is_valid() ); 
+	//Locate target alpha in appropriate simplex of triangulation 
+	Vertex_handle v = alpha_Dt.nearest_neighbor(target_alpha_point);
+	Simplex_handle s = alpha_Dt.simplex(v);    
+
+	vector<Point_d> Simplex_vertices;
+	for(int j=0; j<=n; ++j){
+		Vertex_handle vertex = alpha_Dt.vertex_of_simplex(s,j);
+		Point_d Pt = alpha_Dt.associated_point(vertex);
+		Simplex_vertices.push_back(Pt);
+	}
+	return 1;
+
 	//Gnomonic delaunay triangulation
 	// Need iterator but MatrixXd doesn't have it so using methods like described here http://stackoverflow.com/questions/26094379/typecasting-eigenvectorxd-to-stdvector and then using the vector
 
@@ -191,23 +208,10 @@ The following way creates only an instance. No copy constructor/assignment opera
 		Point_d normedCoord(dim, V2.begin(), V2.end());
 		normedCoords.push_back(normedCoord); 
 	}
-
-	
+   
 	for(vector<Point_d>::iterator Itr2 = normedCoords.begin(); Itr2!= normedCoords.end(); ++Itr2){
 		normed_Dt.insert(*Itr2);
 	}
-	//Locate target alpha in appropriate simplex of triangulation 
-	Vertex_handle v = alpha_Dt.nearest_neighbor(target_alpha_point);
-	Simplex_handle s = alpha_Dt.simplex(v);    
-
-	vector<Point_d> Simplex_vertices;
-	for(int j=0; j<=n; ++j){
-		Vertex_handle vertex = alpha_Dt.vertex_of_simplex(s,j);
-		Simplex_vertices.push_back(alpha_Dt.associated_point(vertex));
-	}
-
-	return Simplex_vertices[0][0];
-/*
 	vector<double> coords;
 	vector<double> gnomonicTarget;
 	vector<double> normedBaryoCoords;
@@ -218,7 +222,8 @@ The following way creates only an instance. No copy constructor/assignment opera
 	Point_d alphaBaryoCoord(dim, coords.begin(), coords.end());
 	Vertex_handle vert = gnomonic_Dt.nearest_neighbor(alphaBaryoCoord);
 	Simplex_handle simpl = gnomonic_Dt.simplex(vert);    
-
+         
+	
 	vector<Point_d> Simplex_vertices1;
 	for(int k=0; k<=n; ++k){
 		Vertex_handle vertex1 = gnomonic_Dt.vertex_of_simplex(simpl,k);

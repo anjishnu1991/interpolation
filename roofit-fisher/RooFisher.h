@@ -43,6 +43,7 @@ using namespace Eigen;
 #endif
 
 
+
 typedef std::map<int,vector<double>> keyType;
 typedef std::map<keyType, RooAbsReal*> FunctionMap;
 class RooFisher : public RooAbsReal{
@@ -57,7 +58,7 @@ public:
 protected:
 
   virtual Double_t evaluate() const ;
-  keyType  _parameterPoints;
+  vector<vector<double>> parameterPoints;
   RooListProxy _paramSet;
   RooListProxy _varList;
   RooListProxy _inputPdfs;

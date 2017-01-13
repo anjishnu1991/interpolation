@@ -55,7 +55,7 @@ namespace ROOT {
       ::RooFisher *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::RooFisher >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("RooFisher", ::RooFisher::Class_Version(), "RooFisher.h", 48,
+         instance("RooFisher", ::RooFisher::Class_Version(), "RooFisher.h", 49,
                   typeid(::RooFisher), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::RooFisher::Dictionary, isa_proxy, 16,
                   sizeof(::RooFisher) );
@@ -120,23 +120,20 @@ void RooFisher::Streamer(TBuffer &R__b)
       Version_t R__v = R__b.ReadVersion(&R__s, &R__c); if (R__v) { }
       RooAbsReal::Streamer(R__b);
       {
-         keyType &R__stl =  _parameterPoints;
+         vector<vector<double> > &R__stl =  parameterPoints;
          R__stl.clear();
-         TClass *R__tcl2 = TBuffer::GetClass(typeid(class std::vector<double, class std::allocator<double> >));
-         if (R__tcl2==0) {
-            Error("_parameterPoints streamer","Missing the TClass object for class std::vector<double, class std::allocator<double> >!");
+         TClass *R__tcl1 = TBuffer::GetClass(typeid(class std::vector<double, class std::allocator<double> >));
+         if (R__tcl1==0) {
+            Error("parameterPoints streamer","Missing the TClass object for class std::vector<double, class std::allocator<double> >!");
             return;
          }
          int R__i, R__n;
          R__b >> R__n;
+         R__stl.reserve(R__n);
          for (R__i = 0; R__i < R__n; R__i++) {
-            int R__t;
-            R__b >> R__t;
-            vector<double> R__t2;
-            R__b.StreamObject(&R__t2,R__tcl2);
-            typedef int Value_t;
-            std::pair<Value_t const, class std::vector<double, class std::allocator<double> > > R__t3(R__t,R__t2);
-            R__stl.insert(R__t3);
+            vector<double> R__t;
+            R__b.StreamObject(&R__t,R__tcl1);
+            R__stl.push_back(R__t);
          }
       }
       _paramSet.Streamer(R__b);
@@ -174,19 +171,18 @@ void RooFisher::Streamer(TBuffer &R__b)
       R__c = R__b.WriteVersion(RooFisher::IsA(), kTRUE);
       RooAbsReal::Streamer(R__b);
       {
-         keyType &R__stl =  _parameterPoints;
+         vector<vector<double> > &R__stl =  parameterPoints;
          int R__n=int(R__stl.size());
          R__b << R__n;
          if(R__n) {
-         TClass *R__tcl2 = TBuffer::GetClass(typeid(class std::vector<double, class std::allocator<double> >));
-         if (R__tcl2==0) {
-            Error("_parameterPointsstreamer","Missing the TClass object for class std::vector<double, class std::allocator<double> >!");
+         TClass *R__tcl1 = TBuffer::GetClass(typeid(class std::vector<double, class std::allocator<double> >));
+         if (R__tcl1==0) {
+            Error("parameterPoints streamer","Missing the TClass object for class std::vector<double, class std::allocator<double> >!");
             return;
          }
-            keyType::iterator R__k;
+            vector<vector<double> >::iterator R__k;
             for (R__k = R__stl.begin(); R__k != R__stl.end(); ++R__k) {
-            R__b << ((*R__k).first );
-            R__b.StreamObject((vector<double>*)&((*R__k).second),R__tcl2);
+            R__b.StreamObject((vector<double>*)&(*R__k),R__tcl1);
             }
          }
       }
@@ -373,69 +369,6 @@ namespace ROOT {
       ((current_t*)p)->~current_t();
    }
 } // end of namespace ROOT for class vector<double>
-
-namespace ROOT {
-   static TClass *maplEintcOvectorlEdoublegRsPgR_Dictionary();
-   static void maplEintcOvectorlEdoublegRsPgR_TClassManip(TClass*);
-   static void *new_maplEintcOvectorlEdoublegRsPgR(void *p = 0);
-   static void *newArray_maplEintcOvectorlEdoublegRsPgR(Long_t size, void *p);
-   static void delete_maplEintcOvectorlEdoublegRsPgR(void *p);
-   static void deleteArray_maplEintcOvectorlEdoublegRsPgR(void *p);
-   static void destruct_maplEintcOvectorlEdoublegRsPgR(void *p);
-
-   // Function generating the singleton type initializer
-   static TGenericClassInfo *GenerateInitInstanceLocal(const map<int,vector<double> >*)
-   {
-      map<int,vector<double> > *ptr = 0;
-      static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(map<int,vector<double> >));
-      static ::ROOT::TGenericClassInfo 
-         instance("map<int,vector<double> >", -2, "map", 96,
-                  typeid(map<int,vector<double> >), ::ROOT::Internal::DefineBehavior(ptr, ptr),
-                  &maplEintcOvectorlEdoublegRsPgR_Dictionary, isa_proxy, 0,
-                  sizeof(map<int,vector<double> >) );
-      instance.SetNew(&new_maplEintcOvectorlEdoublegRsPgR);
-      instance.SetNewArray(&newArray_maplEintcOvectorlEdoublegRsPgR);
-      instance.SetDelete(&delete_maplEintcOvectorlEdoublegRsPgR);
-      instance.SetDeleteArray(&deleteArray_maplEintcOvectorlEdoublegRsPgR);
-      instance.SetDestructor(&destruct_maplEintcOvectorlEdoublegRsPgR);
-      instance.AdoptCollectionProxyInfo(TCollectionProxyInfo::Generate(TCollectionProxyInfo::MapInsert< map<int,vector<double> > >()));
-      return &instance;
-   }
-   // Static variable to force the class initialization
-   static ::ROOT::TGenericClassInfo *_R__UNIQUE_(Init) = GenerateInitInstanceLocal((const map<int,vector<double> >*)0x0); R__UseDummy(_R__UNIQUE_(Init));
-
-   // Dictionary for non-ClassDef classes
-   static TClass *maplEintcOvectorlEdoublegRsPgR_Dictionary() {
-      TClass* theClass =::ROOT::GenerateInitInstanceLocal((const map<int,vector<double> >*)0x0)->GetClass();
-      maplEintcOvectorlEdoublegRsPgR_TClassManip(theClass);
-   return theClass;
-   }
-
-   static void maplEintcOvectorlEdoublegRsPgR_TClassManip(TClass* ){
-   }
-
-} // end of namespace ROOT
-
-namespace ROOT {
-   // Wrappers around operator new
-   static void *new_maplEintcOvectorlEdoublegRsPgR(void *p) {
-      return  p ? ::new((::ROOT::Internal::TOperatorNewHelper*)p) map<int,vector<double> > : new map<int,vector<double> >;
-   }
-   static void *newArray_maplEintcOvectorlEdoublegRsPgR(Long_t nElements, void *p) {
-      return p ? ::new((::ROOT::Internal::TOperatorNewHelper*)p) map<int,vector<double> >[nElements] : new map<int,vector<double> >[nElements];
-   }
-   // Wrapper around operator delete
-   static void delete_maplEintcOvectorlEdoublegRsPgR(void *p) {
-      delete ((map<int,vector<double> >*)p);
-   }
-   static void deleteArray_maplEintcOvectorlEdoublegRsPgR(void *p) {
-      delete [] ((map<int,vector<double> >*)p);
-   }
-   static void destruct_maplEintcOvectorlEdoublegRsPgR(void *p) {
-      typedef map<int,vector<double> > current_t;
-      ((current_t*)p)->~current_t();
-   }
-} // end of namespace ROOT for class map<int,vector<double> >
 
 namespace {
   void TriggerDictionaryInitialization_RooFisherDict_Impl() {

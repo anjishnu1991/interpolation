@@ -27,11 +27,11 @@ int main(){
     std::vector<Point_d> points;
    
 
-   Point_d point1(0,1);
-   Point_d point2(1.,1.);
-   Point_d point3(0.5,1.5);
+   Point_d point1(1,1);
+   Point_d point2(2,2);
+   Point_d point3(3,3);
 
-    Point_d point(0.5,1.);
+    Point_d point(1.8,1.8);
 
 
     points.push_back(point1);
@@ -61,9 +61,9 @@ int main(){
     for(int j=0; j<=d; ++j){
  	  Vertex_handle vertex = Dt.vertex_of_simplex(s,j);
 	  Point_d Pt = Dt.associated_point(vertex);
+   	  std::cout << Pt[0] << std::endl; 
        	  Simplex_vertices.push_back(Pt);
      }
-   	  std::cout << Simplex_vertices[0][1] << std::endl; 
     std::vector<double> coords;
     K::Barycentric_coordinates_d BaryCoords;
     BaryCoords(Simplex_vertices.begin(), Simplex_vertices.end(),point,std::inserter(coords, coords.begin()));
