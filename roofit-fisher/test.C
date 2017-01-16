@@ -17,7 +17,7 @@ void test(){
 	alpha1.push_back(1);
 	alpha2.push_back(1);
 	alpha2.push_back(1);
-	alpha3.push_back(0.5);
+	alpha3.push_back(1.5);
 	alpha3.push_back(1.5);
         point[0] = alpha1;
         point1[1] = alpha2;
@@ -73,9 +73,9 @@ void test(){
 
 		//Fisher->plotOn(frame, RooFit::LineColor(kRed));
 
-		mu->setVal(0.8);
+		mu->setVal(0.5);
 		mu->Print();
-		sigma->setVal(0.8);
+		sigma->setVal(0.5);
 		sigma->Print();
                 cout << "The value is " << Fisher->getVal() << endl;
 //		Fisher->plotOn(frame, RooFit::LineColor(kRed));

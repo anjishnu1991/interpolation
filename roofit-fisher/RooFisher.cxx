@@ -152,20 +152,20 @@ The following way creates only an instance. No copy constructor/assignment opera
 
 
 	CGAL_assertion(alpha_Dt.empty());
-	return 1;;
-/*
 	//Delaunay triangulation of alphas
 	for(vector<vector<double>>::const_iterator it =  parameterPoints.begin(); it !=  parameterPoints.end(); it++) {
 		Point_d alpha_i(dim, it->begin(), it->end()); 
 		alphas.push_back(alpha_i); 
 	}
-	
-	for(vector<Point_d>::iterator Itr = alphas.begin(); Itr!= alphas.end(); ++Itr){
-                Point_d Pt =(*Itr);
-		alpha_Dt.insert(Pt);
+//	return n;
+	vector<Point_d>::iterator Itr;	
+	for(Itr = alphas.begin(); Itr!= alphas.end(); ++Itr){
+		alpha_Dt.insert(*Itr);
 	}
+        std::list<Simplex_handle> NL = alpha_Dt.all_simplices(D::NEAREST);
+        CGAL_assertion(!alpha_Dt.empty());
+    	CGAL_assertion(alpha_Dt.is_valid() );
 
-        CGAL_assertion(alpha_Dt.is_valid() ); 
 	//Locate target alpha in appropriate simplex of triangulation 
 	Vertex_handle v = alpha_Dt.nearest_neighbor(target_alpha_point);
 	Simplex_handle s = alpha_Dt.simplex(v);    
@@ -176,12 +176,16 @@ The following way creates only an instance. No copy constructor/assignment opera
 		Point_d Pt = alpha_Dt.associated_point(vertex);
 		Simplex_vertices.push_back(Pt);
 	}
-	return 1;
+	
+    	return Simplex_vertices[1][1]; 
+	//Barycentric coordinates of target alpha in alpha simplex
+/*	vector<double> coords;
+	K::Barycentric_coordinates_d BaryCoords;
+	BaryCoords(Simplex_vertices.begin(), Simplex_vertices.end(),target_alpha_point,std::inserter(coords, coords.begin()));
 
 	//Gnomonic delaunay triangulation
 	// Need iterator but MatrixXd doesn't have it so using methods like described here http://stackoverflow.com/questions/26094379/typecasting-eigenvectorxd-to-stdvector and then using the vector
-
-	vector<Point_d> gnomonicCoords;
+NKED_WITH_TBB
 	for(int i=0; i<gnomonicProjection.rows(); ++i){
 
 		VectorXd v1 = gnomonicProjection.row(i);
@@ -212,12 +216,8 @@ The following way creates only an instance. No copy constructor/assignment opera
 	for(vector<Point_d>::iterator Itr2 = normedCoords.begin(); Itr2!= normedCoords.end(); ++Itr2){
 		normed_Dt.insert(*Itr2);
 	}
-	vector<double> coords;
 	vector<double> gnomonicTarget;
 	vector<double> normedBaryoCoords;
-	//Barycentric coordinates of target alpha in alpha simplex
-	K::Barycentric_coordinates_d BaryCoords;
-	BaryCoords(Simplex_vertices.begin(), Simplex_vertices.end(),target_alpha_point,std::inserter(coords, coords.begin()));
 	// Locate and barycentric coords of gnomonicTarget
 	Point_d alphaBaryoCoord(dim, coords.begin(), coords.end());
 	Vertex_handle vert = gnomonic_Dt.nearest_neighbor(alphaBaryoCoord);
