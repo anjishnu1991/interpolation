@@ -19,9 +19,10 @@ SRCS      := $(wildcard *.$(SrcSuf))
 HDRS      := $(SRCS:.$(SrcSuf)=.h) LinkDef.h
 HDRS      := $(filter-out $(DICTH),$(HDRS))
 TARGETLIB := libRooFisher.$(DllSuf)
+INCDIRS   := -I/usr/local/include
+LDFLAGS   := -shared 
 CFLAGS    := $(CXXFLAGS) $(INCDIRS)
 OBJS      := $(SRCS:.$(SrcSuf)=.$(ObjSuf))
-
 ############# RULES ###############
 
 .$(SrcSuf).$(ObjSuf):
@@ -40,7 +41,7 @@ $(DICT): $(HDRS)
 
 $(TARGETLIB): $(OBJS) $(DICTO)
 ifeq ($(PLATFORM),macosx)
-	$(LD) $(SOFLAGS)$@ $(LDFLAGS)  $^ $(OutPutOpt) $@ $(GLIBS) -lRooFit -lRooFitCore -lPython
+	$(LD) $(SOFLAGS)$@ $(LDFLAGS)  $^ $(OutPutOpt) $@ $(GLIBS)  -lRooFit -lRooFitCore -lPython -lCGAL -lgmp -lmpfr -lboost_thread-mt -lboost_system-mt -lboost_chrono-mt -lboost_date_time-mt -lboost_atomic-mt 	
 else
 	$(LD) $(SOFLAGS) $(LDFLAGS) $^ $(GLIBS) $(OutPutOpt)$@
 endif
