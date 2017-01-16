@@ -84,8 +84,9 @@ w = (RooWorkspace*)win.Clone();
         n = _paramSet.getSize();
         dim = n+1;
 	embeded = MatrixXd::Zero(dim,dim);
-        gnomonicProjection = MatrixXd::Zero(dim,dim);
+        MatrixXd gnomonicProjection_temp = MatrixXd::Zero(dim,dim);
         normedVertices = MatrixXd::Zero(dim,dim-1);
+        gnomonicProjection = MatrixXd::Zero(dim,dim-1);
        	embeded(0,n) = -1;
 	for(int k=1; k<dim;++k){
 		MatrixXd y(k,k);
@@ -111,14 +112,13 @@ w = (RooWorkspace*)win.Clone();
 	}
         
 	for(int i=0; i<dim; ++i){
-		gnomonicProjection.row(i) = -1*embeded.row(i)/embeded(i,n);            
+		gnomonicProjection_temp.row(i) = -1*embeded.row(i)/embeded(i,n);            
 	}        
-	normedVertices =  gnomonicProjection.block(0,0,dim,n);
+	 gnomonicProjection =  gnomonicProjection_temp.block(0,0,dim,n);
+	 normedVertices = gnomonicProjection;
 	for(int row=1; row<dim; ++row){
 		normedVertices.row(row) /=  sqrt((normedVertices.row(row)).squaredNorm());           
 	} 
-
-
           
 }
 
@@ -139,7 +139,7 @@ Double_t RooFisher::evaluate() const
 		target_alpha.push_back(target_alpha_i); 
 	}    
 
-	Point_d target_alpha_point(dim, target_alpha.begin(), target_alpha.end()); 
+	Point_d target_alpha_point(n, target_alpha.begin(), target_alpha.end()); 
 
 /*	TODO Try to make delaunay triangulations member variables. Since the datatype D doesn't have assignment operator it didn't work for me. Kyle, if you have any ideas, it would be great. 
 http://doc.cgal.org/latest/Convex_hull_d/classCGAL_1_1Delaunay__d.html
@@ -154,7 +154,7 @@ The following way creates only an instance. No copy constructor/assignment opera
 	CGAL_assertion(alpha_Dt.empty());
 	//Delaunay triangulation of alphas
 	for(vector<vector<double>>::const_iterator it =  parameterPoints.begin(); it !=  parameterPoints.end(); it++) {
-		Point_d alpha_i(dim, it->begin(), it->end()); 
+		Point_d alpha_i(n, it->begin(), it->end()); 
 		alphas.push_back(alpha_i); 
 	}
 //	return n;
@@ -177,22 +177,24 @@ The following way creates only an instance. No copy constructor/assignment opera
 		Simplex_vertices.push_back(Pt);
 	}
 	
-    	return Simplex_vertices[1][1]; 
 	//Barycentric coordinates of target alpha in alpha simplex
-/*	vector<double> coords;
+	vector<double> coords;
+ 	vector<Point_d> gnomonicCoords;
+ 	vector<Point_d> normedCoords;
+
+
 	K::Barycentric_coordinates_d BaryCoords;
 	BaryCoords(Simplex_vertices.begin(), Simplex_vertices.end(),target_alpha_point,std::inserter(coords, coords.begin()));
 
 	//Gnomonic delaunay triangulation
 	// Need iterator but MatrixXd doesn't have it so using methods like described here http://stackoverflow.com/questions/26094379/typecasting-eigenvectorxd-to-stdvector and then using the vector
-NKED_WITH_TBB
 	for(int i=0; i<gnomonicProjection.rows(); ++i){
 
 		VectorXd v1 = gnomonicProjection.row(i);
 		vector<double> v2;
 		v2.resize(v1.size());
 		VectorXd::Map(&v2[0], v1.size()) = v1;
-		Point_d gnomonicCoord(dim, v2.begin(), v2.end());
+		Point_d gnomonicCoord(n, v2.begin(), v2.end());
 		gnomonicCoords.push_back(gnomonicCoord); 
 	}
 
@@ -201,7 +203,6 @@ NKED_WITH_TBB
 		gnomonic_Dt.insert(*Itr1);
 	}
 
-	vector<Point_d> normedCoords;
 	//normedVertices delaunay triangulation 
 	for(int i=0; i<normedVertices.rows(); ++i){
 
@@ -209,7 +210,7 @@ NKED_WITH_TBB
 		vector<double> V2;
 		V2.resize(V1.size());
 		VectorXd::Map(&V2[0], V1.size()) = V1;
-		Point_d normedCoord(dim, V2.begin(), V2.end());
+		Point_d normedCoord(n, V2.begin(), V2.end());
 		normedCoords.push_back(normedCoord); 
 	}
    
@@ -219,7 +220,7 @@ NKED_WITH_TBB
 	vector<double> gnomonicTarget;
 	vector<double> normedBaryoCoords;
 	// Locate and barycentric coords of gnomonicTarget
-	Point_d alphaBaryoCoord(dim, coords.begin(), coords.end());
+	Point_d alphaBaryoCoord(n, coords.begin(), coords.end());
 	Vertex_handle vert = gnomonic_Dt.nearest_neighbor(alphaBaryoCoord);
 	Simplex_handle simpl = gnomonic_Dt.simplex(vert);    
          
@@ -236,7 +237,7 @@ NKED_WITH_TBB
 
 	gnomonicbaryoCoords(Simplex_vertices1.begin(), Simplex_vertices1.end(),target_alpha_point,std::inserter(gnomonicTarget, gnomonicTarget.begin()));
 	//Getting normedBaryoCoords
-	Point_d gnomonicTargetCoord(dim, gnomonicTarget.begin(), gnomonicTarget.end());
+	Point_d gnomonicTargetCoord(n, gnomonicTarget.begin(), gnomonicTarget.end());
 	Vertex_handle vertx = normed_Dt.nearest_neighbor(gnomonicTargetCoord);
 	Simplex_handle simplx = normed_Dt.simplex(vertx);    
 
@@ -250,8 +251,6 @@ NKED_WITH_TBB
 
 	double t_val = atan(std::inner_product(gnomonicTarget.begin(), gnomonicTarget.end(), gnomonicTarget.begin(),0));
 
-        return t_val;
-
 
 
 	RooAbsReal* unNormtan;
@@ -259,7 +258,7 @@ NKED_WITH_TBB
 	for(int m=0; m<dim; ++m){
                 string rootpdfName = _rootPdfs.at(m)->GetName();
                 string rootpdf0Name = _rootPdfs.at(0)->GetName();
-                string tName = "cexpr::t(`(" +rootpdfName+ "- InnerProducts[0][m]*"+ rootpdf0Name+")'," +rootpdfName+"," +rootpdf0Name + ")";; 
+                string tName = "cexpr::t(`(" +rootpdfName+ "- InnerProducts[0][m]*"+ rootpdf0Name+")'," +rootpdfName+"," +rootpdf0Name + ")"; 
 		RooAbsReal* t = (RooAbsReal*) w->factory(tName.c_str());
 		RooAbsReal* Norm = (RooAbsReal*) w->factory("prod:t^2('t*t')");
 		double norm_integral = ((RooAbsReal*)Norm->createIntegral(*x, NormSet(*x)))->getVal();
@@ -285,6 +284,4 @@ NKED_WITH_TBB
 
 	return interp_val;   
 
-//	return ;
-*/
 }   
