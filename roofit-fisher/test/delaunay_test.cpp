@@ -29,9 +29,22 @@ int main(){
 
    Point_d point1(0,1);
    Point_d point2(1.,1.);
-   Point_d point3(0.5,1.5);
+   Point_d point3(1.5,1.5);
 
-    Point_d point(0.5,1.);
+    Point_d point(0.5,0.5);
+
+    MatrixXd normedVertices;
+    MatrixXd gnomonicProjection; 
+
+
+    normedVertices <<  0 ,        0,
+	               0   ,     -1,
+		      -0.322537, -0.946557;
+    
+    gnomonicProjection <<   0,         0,        -1,
+	            	    0,     -0.771018,     -1,
+		    	-0.234018, -0.686777      -1;
+		   
 
 
     points.push_back(point1);
@@ -59,14 +72,15 @@ int main(){
  
     std::vector<Point_d> Simplex_vertices;
     for(int j=0; j<=d; ++j){
+	  std::cout << "Vertex " << j << std::endl;
  	  Vertex_handle vertex = Dt.vertex_of_simplex(s,j);
 	  Point_d Pt = Dt.associated_point(vertex);
        	  Simplex_vertices.push_back(Pt);
      }
-   	  std::cout << Simplex_vertices[0][1] << std::endl; 
+   	  std::cout << "Pls " <<Simplex_vertices[1][1] << std::endl; 
     std::vector<double> coords;
     K::Barycentric_coordinates_d BaryCoords;
     BaryCoords(Simplex_vertices.begin(), Simplex_vertices.end(),point,std::inserter(coords, coords.begin()));
-    std::cout << coords[0] << std::endl; 
+    std::cout << coords[0] <<  " " << coords[1] << std::endl; 
    return 0;
 }

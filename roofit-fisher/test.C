@@ -6,7 +6,6 @@ using namespace std;
 void test(){
 
 	gSystem->Load("libRooFisher.so");
-	gSystem->Load("/usr/local/lib/libCGAL.so");
 
 
        
@@ -17,16 +16,16 @@ void test(){
 	alpha1.push_back(1);
 	alpha2.push_back(1);
 	alpha2.push_back(1);
-	alpha3.push_back(1.5);
-	alpha3.push_back(1.5);
+	alpha3.push_back(0.5);
+	alpha3.push_back(0.5);
         point[0] = alpha1;
         point1[1] = alpha2;
         point2[2] = alpha3;
 
 	RooWorkspace* w = new RooWorkspace("ws");
-	 w->factory("Gaussian::g1(y[-10,10],mu1[0,-5,5],sigma1[1, 0, 3])");
-	 w->factory("Gaussian::g2(y[-10,10],mu2[1,-5,5],sigma1[1, 0, 3])");
-	 w->factory("Gaussian::g3(y[-10,10],mu3[0.5,-5,5],sigma3[1.5, 0, 3])");
+	 w->factory("Gaussian::g1(y[-5,5],mu1[0,-5,5],sigma1[1, 0, 3])");
+	 w->factory("Gaussian::g2(y[-5,5],mu2[1,-5,5],sigma1[1, 0, 3])");
+	 w->factory("Gaussian::g3(y[-5,5],mu3[0.5,-5,5],sigma3[0.5, 0, 3])");
 	 RooRealVar* y = (RooRealVar*)w->var("y");
          RooRealVar* mu =(RooRealVar*)w->factory("mu[-5,5]");
 	 mu = w->var("mu");
@@ -46,19 +45,18 @@ void test(){
         FunctionMap FisherMap;
         RooArgList params(*mu,*sigma);  
         RooArgList vars(*y);  
-//	RooPlot* frame = x->frame();
+	RooPlot* frame = y->frame();
         pdf1= w->pdf("g1");
-//	pdf1->plotOn(frame);
+	pdf1->plotOn(frame);
 	FisherMap[point] = pdf1;
         pdf2 = w->pdf("g2");
-//	pdf2->plotOn(frame);
+	pdf2->plotOn(frame);
 	FisherMap[point1] = pdf2;
         pdf3 = w->pdf("g3");
-//	pdf3->plotOn(frame);
+	pdf3->plotOn(frame);
 	FisherMap[point2] = pdf3;
-//	frame->Draw();
         
-	RooFisher * Fisher = new RooFisher("testFisher", "testFisher", params, vars, FisherMap, *w); 
+	RooFisher * Fisher = new RooFisher("testFisher", "testFisher", params, vars, FisherMap); 
         cout << "a" << endl; 
         cout << "b" << endl; 
 	w->Print();
@@ -77,9 +75,12 @@ void test(){
 		mu->Print();
 		sigma->setVal(0.5);
 		sigma->Print();
+		y->setVal(0.5);
+		y->Print();
                 cout << "The value is " << Fisher->getVal() << endl;
 //		Fisher->plotOn(frame, RooFit::LineColor(kRed));
 //		Fisher->plotOn(frame);
+		frame->Draw();
 
 
 

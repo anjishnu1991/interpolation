@@ -14,7 +14,7 @@
 ClassImp(RooFisher) 
 
 
-	RooFisher::RooFisher(const char *name, const char *title, const RooArgList& paramSet, const RooArgList& varList, const  FunctionMap& FisherMap, const RooWorkspace& win): 
+	RooFisher::RooFisher(const char *name, const char *title, const RooArgList& paramSet, const RooArgList& varList, const  FunctionMap& FisherMap): 
 
 
 		RooAbsReal (name, title),
@@ -23,7 +23,6 @@ ClassImp(RooFisher)
 		_inputPdfs("inputPdfs","inputPdfs", this)
 
 { 
-w = (RooWorkspace*)win.Clone();
 	for(FunctionMap::const_iterator it = FisherMap.begin(); it != FisherMap.end(); it++) {
 		keyType _parameterPoints = it->first;
 		_inputPdfs.add(*it->second);
@@ -47,29 +46,18 @@ w = (RooWorkspace*)win.Clone();
 	RooFIter Iter_pdf1(_inputPdfs.fwdIterator());
 	RooAbsReal* pdf1;
 	RooAbsReal* pdf2;
-	RooAbsReal* inner_prod;
+	RooFormulaVar* inner_prod;
 	vector<double> list_inner_prod;
 	RooAbsReal* q;
 
 	while((pdf1=(RooAbsReal*)Iter_pdf1.next())){
-		string pdf1Name = pdf1->GetName();
-		string sqrtF = "cexpr::sqrt_" + pdf1Name +"('sqrt(" + pdf1Name + ")'," + pdf1Name + ")";      
-		q = (RooAbsReal* ) w->factory(sqrtF.c_str());
+		q = (RooAbsReal*)(new RooFormulaVar("q","q","sqrt(@0)",RooArgList(*pdf1)));
 		_rootPdfs.add(*q);
 		RooFIter Iter_pdf2(_inputPdfs.fwdIterator());
 		while((pdf2=(RooAbsReal*)Iter_pdf2.next())){
-			string pdf2Name = pdf2->GetName();
-                        string sqrtF_pdf1_pdf2;
-			if(pdf2Name==pdf1Name){
-				sqrtF_pdf1_pdf2 = "cexpr::sqrt_" + pdf1Name + "_" + pdf2Name + "('sqrt(" + pdf1Name + "*" + pdf2Name + ")'," + pdf1Name + ")";
-			}
-			else{	
-				 sqrtF_pdf1_pdf2 = "cexpr::sqrt_"+ pdf1Name + "_" + pdf2Name + "('sqrt(" + pdf1Name + "*" + pdf2Name + ")'," + pdf1Name + "," + pdf2Name + ")";
-			}				
-			inner_prod = (RooAbsReal* ) w->factory(sqrtF_pdf1_pdf2.c_str());
+			inner_prod = new RooFormulaVar("inner_prod","inner_prod","sqrt(@0*@1)",RooArgList(*pdf1,*pdf2));
 		        string var_x = _varList.at(0)->GetName();
                         x = (RooRealVar*)(_varList.at(0));
-                        x = w->var(var_x.c_str());
                         
 			RooAbsReal* integral = inner_prod->createIntegral(*x, NormSet(*x));
 			double Inner_Product = integral->getVal();
@@ -133,7 +121,6 @@ Double_t RooFisher::evaluate() const
 	//Get target alpha point
 	RooRealVar* param; 
 	RooFIter paramIter(_paramSet.fwdIterator()) ;
-	RooFIter tangentIter(_tangents.fwdIterator()) ;
 	while((param=(RooRealVar*)paramIter.next())) {
 		target_alpha_i = param->getVal(); 
 		target_alpha.push_back(target_alpha_i); 
@@ -250,37 +237,38 @@ The following way creates only an instance. No copy constructor/assignment opera
 	normedbaryoCoords(Simplex_vertices2.begin(), Simplex_vertices2.end(),gnomonicTargetCoord,std::inserter(normedBaryoCoords, normedBaryoCoords.begin()));
 
 	double t_val = atan(std::inner_product(gnomonicTarget.begin(), gnomonicTarget.end(), gnomonicTarget.begin(),0));
+	double cos_t_val = cos(t_val);
+	double sin_t_val = sin(t_val);
 
-
-
-	RooAbsReal* unNormtan;
-
-	for(int m=0; m<dim; ++m){
-                string rootpdfName = _rootPdfs.at(m)->GetName();
-                string rootpdf0Name = _rootPdfs.at(0)->GetName();
-                string tName = "cexpr::t(`(" +rootpdfName+ "- InnerProducts[0][m]*"+ rootpdf0Name+")'," +rootpdfName+"," +rootpdf0Name + ")"; 
-		RooAbsReal* t = (RooAbsReal*) w->factory(tName.c_str());
-		RooAbsReal* Norm = (RooAbsReal*) w->factory("prod:t^2('t*t')");
-		double norm_integral = ((RooAbsReal*)Norm->createIntegral(*x, NormSet(*x)))->getVal();
-		RooAbsReal* u = (RooAbsReal*) w->factory("cexpr::u('t/sqrt(norm_integral)')");
-
-		RooAbsReal* unNormtan_i = (RooAbsReal*) w->factory("sum::uNti(normBaryoCoords[m]*u,unNormtan)");
-		unNormtan = (RooAbsReal*) w->factory("sum::unt(normedBaryoCoords[m]*u,unNormtan)");
-
-
-
-
-
+	int nSize = _rootPdfs.getSize();
+	RooAbsReal* tangent;
+	RooAbsReal* unNormtan=0;
+	RooAbsReal* q_0 =(RooAbsReal*)(_rootPdfs.at(0));
+	for(int m=1; m<nSize; ++m){
+		RooAbsReal* q_m =(RooAbsReal*)(_rootPdfs.at(m));
+		RooRealVar* IP_0m = new RooRealVar("IP_0m","IP_0m",InnerProducts[0][m]);
+	        RooAbsReal* t = (RooAbsReal*)(new RooFormulaVar("t","t","@0 - @1*@2", RooArgList(*q_m,*IP_0m,*q_0)));
+ 		RooProduct* Norm = (new RooProduct("Norm", "Norm", RooArgList(*t,*t)));
+		double norm_integral = ((RooAbsReal*)Norm->createIntegral(*x))->getVal();
+		RooRealVar* norm_integral_var = new RooRealVar("norm_integral_var","norm_integral_var",norm_integral);
+		RooRealVar* normedBaryoCoords_var = new RooRealVar("normedBaryoCoords_var","normedBaryoCoords_var",normedBaryoCoords[m-1]);
+		RooAbsReal* unNormtan_i = (RooAbsReal*)(new RooFormulaVar("unNormtan_i","unNormtan_i","@0*@2/sqrt(@1)", RooArgList(*t,*norm_integral_var,*normedBaryoCoords_var)));
+		unNormtan = (RooAbsReal*)(new RooAddition("unNormtan","unNormtan",RooArgList(*unNormtan_i,*unNormtan)));
+ 		RooProduct* Normtan = (new RooProduct("Normtan", "Normtan", RooArgList(*unNormtan,*unNormtan)));
+		double Normtan_integral = ((RooAbsReal*)Normtan->createIntegral(*x, NormSet(*x)))->getVal();
+		RooRealVar* normtan_integral_var = new RooRealVar("normtan_integral_var","normtan_integral_var",Normtan_integral);
+		tangent = (RooAbsReal*)(new RooFormulaVar("tangent","tangent","@0/sqrt(@1)", RooArgList(*unNormtan,*normtan_integral_var)));
 
 	}
-	RooAbsReal* unnorm_tan_prod =  (RooAbsReal* ) w->factory("prod::unt*unt(unNormtan*unNormtan)");
-	RooAbsReal* normtan = unnorm_tan_prod->createIntegral(*x, NormSet(*x));
-	RooAbsReal* tangent = (RooAbsReal*) w->factory("cexpr::tangent(`(unNormtan/sqrt(normtan))',unNormtan,normtan");
+		RooRealVar* cost = new RooRealVar("cost","cost",cos_t_val);
+		RooRealVar* sint = new RooRealVar("sint","sint",sin_t_val);
+		RooAbsReal* interpolant = (RooAbsReal*)(new RooFormulaVar("interpolant","interpolant","(@0*@2 + @1*@3)*(@0*@2 + @1*@3)",RooArgList(*cost,*sint,*q_0,*tangent)));
 
-	RooAbsReal* q_interpolant =  (RooAbsReal*) w->factory("cexpr::tangent(`(cos(t_val)*,_rootPdfs.at(0) + sin(t_val)*tangent)',tangent,_rootPdfs.at(0)");
-	RooAbsReal* interpolant =  (RooAbsReal* ) w->factory("prod::interpolant(q_interpolant*q_interpolant)");
 
-	Double_t interp_val = interpolant->getVal();
+        const RooArgSet* nset = _varList.nset();
+
+	Double_t interp_val = interpolant->getVal(nset);
+	
 
 	return interp_val;   
 

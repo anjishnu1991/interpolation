@@ -55,7 +55,7 @@ namespace ROOT {
       ::RooFisher *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::RooFisher >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("RooFisher", ::RooFisher::Class_Version(), "RooFisher.h", 49,
+         instance("RooFisher", ::RooFisher::Class_Version(), "RooFisher.h", 53,
                   typeid(::RooFisher), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::RooFisher::Dictionary, isa_proxy, 16,
                   sizeof(::RooFisher) );
@@ -122,9 +122,9 @@ void RooFisher::Streamer(TBuffer &R__b)
       {
          vector<vector<double> > &R__stl =  parameterPoints;
          R__stl.clear();
-         TClass *R__tcl1 = TBuffer::GetClass(typeid(class std::vector<double, class std::allocator<double> >));
+         TClass *R__tcl1 = TBuffer::GetClass(typeid(class std::__1::vector<double, class std::__1::allocator<double> >));
          if (R__tcl1==0) {
-            Error("parameterPoints streamer","Missing the TClass object for class std::vector<double, class std::allocator<double> >!");
+            Error("parameterPoints streamer","Missing the TClass object for class std::__1::vector<double, class std::__1::allocator<double> >!");
             return;
          }
          int R__i, R__n;
@@ -147,9 +147,9 @@ void RooFisher::Streamer(TBuffer &R__b)
       {
          vector<vector<double> > &R__stl =  InnerProducts;
          R__stl.clear();
-         TClass *R__tcl1 = TBuffer::GetClass(typeid(class std::vector<double, class std::allocator<double> >));
+         TClass *R__tcl1 = TBuffer::GetClass(typeid(class std::__1::vector<double, class std::__1::allocator<double> >));
          if (R__tcl1==0) {
-            Error("InnerProducts streamer","Missing the TClass object for class std::vector<double, class std::allocator<double> >!");
+            Error("InnerProducts streamer","Missing the TClass object for class std::__1::vector<double, class std::__1::allocator<double> >!");
             return;
          }
          int R__i, R__n;
@@ -175,9 +175,9 @@ void RooFisher::Streamer(TBuffer &R__b)
          int R__n=int(R__stl.size());
          R__b << R__n;
          if(R__n) {
-         TClass *R__tcl1 = TBuffer::GetClass(typeid(class std::vector<double, class std::allocator<double> >));
+         TClass *R__tcl1 = TBuffer::GetClass(typeid(class std::__1::vector<double, class std::__1::allocator<double> >));
          if (R__tcl1==0) {
-            Error("parameterPoints streamer","Missing the TClass object for class std::vector<double, class std::allocator<double> >!");
+            Error("parameterPoints streamer","Missing the TClass object for class std::__1::vector<double, class std::__1::allocator<double> >!");
             return;
          }
             vector<vector<double> >::iterator R__k;
@@ -199,9 +199,9 @@ void RooFisher::Streamer(TBuffer &R__b)
          int R__n=int(R__stl.size());
          R__b << R__n;
          if(R__n) {
-         TClass *R__tcl1 = TBuffer::GetClass(typeid(class std::vector<double, class std::allocator<double> >));
+         TClass *R__tcl1 = TBuffer::GetClass(typeid(class std::__1::vector<double, class std::__1::allocator<double> >));
          if (R__tcl1==0) {
-            Error("InnerProducts streamer","Missing the TClass object for class std::vector<double, class std::allocator<double> >!");
+            Error("InnerProducts streamer","Missing the TClass object for class std::__1::vector<double, class std::__1::allocator<double> >!");
             return;
          }
             vector<vector<double> >::iterator R__k;
@@ -259,7 +259,7 @@ namespace ROOT {
       vector<vector<double> > *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<vector<double> >));
       static ::ROOT::TGenericClassInfo 
-         instance("vector<vector<double> >", -2, "vector", 214,
+         instance("vector<vector<double> >", -2, "vector", 457,
                   typeid(vector<vector<double> >), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &vectorlEvectorlEdoublegRsPgR_Dictionary, isa_proxy, 0,
                   sizeof(vector<vector<double> >) );
@@ -322,7 +322,7 @@ namespace ROOT {
       vector<double> *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<double>));
       static ::ROOT::TGenericClassInfo 
-         instance("vector<double>", -2, "vector", 214,
+         instance("vector<double>", -2, "vector", 457,
                   typeid(vector<double>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &vectorlEdoublegR_Dictionary, isa_proxy, 0,
                   sizeof(vector<double>) );
@@ -377,8 +377,8 @@ namespace {
 0
     };
     static const char* includePaths[] = {
-"/home/anjishnu/root-6.08.00/include",
-"/home/anjishnu/interpolation/roofit-fisher/",
+"/usr/local/Cellar/root6/6.08.02/include/root",
+"/Users/anjishnu/interpolation/roofit-fisher/",
 0
     };
     static const char* fwdDeclCode = R"DICTFWDDCLS(

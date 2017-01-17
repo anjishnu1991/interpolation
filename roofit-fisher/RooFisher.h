@@ -15,6 +15,10 @@
 #include "RooWorkspace.h"
 #include "RooRealProxy.h"
 #include "RooListProxy.h"
+#include "RooArgSet.h"
+#include "RooProduct.h"
+#include "RooAddition.h"
+#include "RooFormulaVar.h"
 #include "RooCategoryProxy.h"
 #include "RooAbsCategory.h"
 #include <CGAL/Cartesian_d.h>
@@ -49,7 +53,7 @@ typedef std::map<keyType, RooAbsReal*> FunctionMap;
 class RooFisher : public RooAbsReal{
 public:
   RooFisher() {} ; 
-  RooFisher(const char *name, const char *title, const RooArgList& paramSet, const RooArgList& varList, const  FunctionMap& FisherMap, const RooWorkspace& win);
+  RooFisher(const char *name, const char *title, const RooArgList& paramSet, const RooArgList& varList, const  FunctionMap& FisherMap);
   inline virtual ~RooFisher() { }
   virtual TObject* clone(const char* newName) const{return new RooFisher();}
 
