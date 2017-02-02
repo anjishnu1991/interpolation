@@ -8,7 +8,7 @@ Steps for compiling the program and running it.
 
 
 Problems currently faced
-ybe i
+
 1. The plotting doesn't work in test.C for the RooFisher class although it is inherited from RooAbsReal.
 2. At present the value I get for the test i.e Gauss(x=0, \mu=0.5, \sigma=0.5) is not the value I expect.
 3. I feel this is because of the gnomonic barycentric coordinates I compute in lines 210 to 225.
