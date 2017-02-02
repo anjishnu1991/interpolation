@@ -249,7 +249,7 @@ The following way creates only an instance. No copy constructor/assignment opera
 		RooRealVar* IP_0m = new RooRealVar("IP_0m","IP_0m",InnerProducts[0][m]);
 	        RooAbsReal* t = (RooAbsReal*)(new RooFormulaVar("t","t","@0 - @1*@2", RooArgList(*q_m,*IP_0m,*q_0)));
  		RooProduct* Norm = (new RooProduct("Norm", "Norm", RooArgList(*t,*t)));
-		double norm_integral = ((RooAbsReal*)Norm->createIntegral(*x))->getVal();
+		double norm_integral = ((RooAbsReal*)Norm->createIntegral(*x,NormSet(*x)))->getVal();
 		RooRealVar* norm_integral_var = new RooRealVar("norm_integral_var","norm_integral_var",norm_integral);
 		RooRealVar* normedBaryoCoords_var = new RooRealVar("normedBaryoCoords_var","normedBaryoCoords_var",normedBaryoCoords[m-1]);
 		RooAbsReal* unNormtan_i = (RooAbsReal*)(new RooFormulaVar("unNormtan_i","unNormtan_i","@0*@2/sqrt(@1)", RooArgList(*t,*norm_integral_var,*normedBaryoCoords_var)));
